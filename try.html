@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMART@Clinic</title>
+<style>
+:root{
+  --accent:#087e88;
+  --ink:#132c3b;
+  --muted:#426478;
+  --soft:#eaf8f6;
+  --line:#d4e9e9;
+  --paper:#fff;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0;background:white;color:var(--ink);
+  font:14px/1.55 "Avenir Next",Avenir,"Trebuchet MS",Arial,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button,input,select,textarea{
+  border:1px solid #bddfdf;border-radius:4px;
+  padding:10px 13px;background:white;color:var(--ink);
+}
+button{cursor:pointer;color:#086b76;font-weight:600}
+button:hover{background:#effaf8}
+button:disabled{opacity:.5;cursor:not-allowed}
+.primary{background:var(--accent);border-color:var(--accent);color:white}
+.primary:hover{background:#086771}
+button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,a:focus-visible,summary:focus-visible{
+  outline:3px solid #168d98;outline-offset:3px;
+}
+input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px}
+textarea{width:100%;min-height:110px;resize:vertical}
+label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#254e5e}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:30px;line-height:1.2;letter-spacing:-.8px;font-weight:750}
+h2{font-size:17px;color:#164e5c;font-weight:750}
+h3{font-size:14px;color:#164e5c}
+small,.small{font-size:12px}
+.muted{color:var(--muted)}
+.flex{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.between{justify-content:space-between}
+.brand{font-size:31px;font-weight:800;letter-spacing:-1px;color:#103849;line-height:1.2}
+.brand span{color:#088b95}
+.field{margin:18px 0}
+.notice{
+  padding:13px;background:#faf8f1;border:1px solid #e5ddc6;
+  border-radius:5px;color:#695a3b;font-size:12px;
+}
+.error{color:#a33333;font-size:13px;min-height:21px}
+.success{color:#08717a;font-size:13px;min-height:21px}
+.link{
+  border:0;padding:0;background:transparent;color:#08717a;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.login{
+  width:min(460px,calc(100% - 32px));margin:55px auto;
+  padding:32px;border:1px solid var(--line);
+  border-top:3px solid var(--accent);border-radius:7px;
+}
+.login h1{margin-top:30px;font-size:27px}
+.login input{width:100%}
+.login details{margin-top:22px;border-top:1px solid var(--line);padding-top:17px}
+.account{padding:12px 0;border-bottom:1px solid var(--line);font-size:12px}
+header{
+  padding:25px max(24px,calc((100vw - 1220px)/2));
+  border-bottom:2px solid #0c8790;background:white;
+}
+nav{position:sticky;top:0;z-index:5;background:white;border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1220px;margin:auto;padding:0 24px;display:flex;gap:10px;overflow:auto}
+nav button{
+  border:0;border-bottom:2px solid transparent;border-radius:0;
+  white-space:nowrap;padding:15px;color:#527380;
+}
+nav button[aria-current=page]{
+  color:#08717a;border-bottom-color:var(--accent);background:#f7fcfb;
+}
+main{max-width:1220px;margin:auto;padding:30px 24px 40px}
+.page-heading{margin-bottom:24px}
+.page-heading h1{margin-bottom:8px}
+.welcome{padding:8px 0 27px}
+.welcome .date{color:#08717a;font-size:11px;font-weight:700;letter-spacing:1px}
+.welcome h1{font-size:33px;margin:15px 0 10px}
+.welcome p{color:#355c6c;margin-bottom:0}
+.panel{
+  padding:22px;background:white;border:1px solid var(--line);
+  border-radius:7px;margin-bottom:18px;
+}
+.home-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+.home-grid .panel{margin-bottom:0;padding:24px}
+.patient-panel{border-top:3px solid var(--accent)}
+.home-grid select{width:100%;margin:8px 0 18px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0}
+.card{
+  padding:20px;border:1px solid var(--line);border-radius:7px;
+  text-align:left;display:flex;flex-direction:column;min-height:190px;
+}
+.card:hover{background:#fbfefe;border-color:#91c9c8}
+.card h2{font-size:12px;line-height:1.5;color:#426478;margin:0 0 15px}
+.card .value{color:var(--accent);font-size:29px;font-weight:750;letter-spacing:-.8px}
+.card .description{font-size:12px;font-weight:400;color:var(--muted);margin:10px 0}
+.card .source{
+  margin-top:auto;padding-top:12px;border-top:1px solid #e5f0ef;
+  font-size:11px;font-weight:400;color:#527380;
+}
+.two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+svg{display:block;width:100%}
+.table-wrap{overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #e0eeee;vertical-align:top}
+th{background:#f7fcfb;color:#426478;font-size:11px}
+tbody tr:hover{background:#fbfefe}
+summary{cursor:pointer;color:#164e5c}
+.note{padding:14px 0;border-top:1px solid var(--line)}
+.note p{white-space:pre-wrap;margin:8px 0 0}
+.context-highlight{padding:13px;background:#eaf8f5;border-radius:4px;color:#245563}
+.toolbar{
+  padding:13px 15px;border:1px solid var(--line);border-radius:6px;
+  display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:20px;
+}
+.toolbar label{margin:0}
+.toolbar button[aria-pressed=true]{background:var(--soft);border-color:#91cfca}
+.calendar-scroll{overflow:auto;border:1px solid var(--line);border-radius:7px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(135px,1fr));min-width:945px}
+.day-column{padding:16px 11px;min-height:330px;border-right:1px solid var(--line)}
+.day-column:last-child{border-right:0}
+.day-heading{font-size:12px;padding-bottom:12px;margin-bottom:18px;border-bottom:1px solid #e3efee}
+.today{background:#f7fcfb}
+.today .day-heading{color:var(--accent);border-bottom:2px solid var(--accent)}
+.event{
+  width:100%;text-align:left;background:#eaf8f5;
+  border:1px solid #cce9e5;border-left:3px solid #0a8991;
+  padding:11px;margin-bottom:9px;font-size:12px;
+}
+.event:hover{background:#ddf2ed}
+.event strong{display:block;margin:4px 0;color:#143849}
+.appointment-row{
+  display:block;width:100%;text-align:left;background:transparent;
+  border:0;border-bottom:1px solid #e0eeee;border-radius:0;padding:15px 6px;
+}
+.appointment-row:last-child{border-bottom:0}
+.appointment-row strong{display:block;margin:4px 0;color:#164e5c}
+.day-view{padding:20px}
+.day-view .event{max-width:680px;display:block}
+.empty{padding:20px 0;color:#527380;font-size:13px}
+.settings-panel{max-width:800px}
+.check-row{
+  display:flex;align-items:center;gap:10px;padding:13px 0;
+  border-bottom:1px solid #e0eeee;font-size:14px;font-weight:400;
+}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid .field{margin:8px 0}
+.form-grid input,.form-grid select{width:100%}
+footer{color:#4a6c78;font-size:11px;border-top:1px solid #e2eeee;padding-top:17px;margin-top:28px}
+dialog{
+  width:min(720px,calc(100% - 28px));max-height:88vh;
+  padding:0;border:1px solid #cfe4e4;border-radius:8px;color:var(--ink);
+}
+dialog::backdrop{background:#102f3b65}
+.dialog-heading{
+  padding:19px 24px;background:white;border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:1;
+}
+.dialog-heading h2{margin:0}
+.dialog-body{padding:24px}
+pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:1050px){
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two-col{grid-template-columns:1fr}
+}
+@media(max-width:850px){
+  .home-grid{grid-template-columns:1fr}
+  .welcome h1{font-size:29px}
+}
+@media(max-width:600px){
+  header{padding:22px 18px}
+  .brand{font-size:26px}
+  main{padding:24px 16px}
+  .nav-inner{padding:0 8px;gap:3px}
+  nav button{padding:14px 12px}
+  .welcome h1{font-size:26px}
+  .panel,.home-grid .panel{padding:19px}
+  .card{padding:15px}
+  .card .value{font-size:24px}
+  .login{margin:30px auto;padding:26px}
+  .form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<section id="login" class="login">
+  <div class="brand">SMART<span>@</span>Clinic</div>
+  <h1>Provider sign-in</h1>
+  <p class="muted">Your patients, your schedule, your workspace.</p>
+
+  <form id="login-form">
+    <div class="field">
+      <label for="username">First and last name</label>
+      <input id="username" placeholder="Avery Patel" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="password">Demo password</label>
+      <input id="password" type="password" autocomplete="off" required>
+    </div>
+    <p id="login-error" class="error" role="alert"></p>
+    <button id="password-login" class="primary" style="width:100%">Sign in</button>
+  </form>
+
+  <button id="device-login" type="button" style="width:100%;margin-top:10px">
+    Use device unlock
+  </button>
+
+  <p class="small muted" style="margin-top:16px">
+    Fictional demonstration only. Do not enter a real password.
+    This browser-only prototype is not secure clinical authentication.
+  </p>
+
+  <details>
+    <summary class="small">Demo accounts</summary>
+    <div class="account">
+      <strong>Avery Patel</strong> · Pulmonology<br>
+      Password: <code>AveryDemo!26</code>
+    </div>
+    <div class="account">
+      <strong>Morgan Lee</strong> · Neurology<br>
+      Password: <code>MorganDemo!26</code>
+    </div>
+    <div class="account">
+      <strong>Riley Chen</strong> · Endocrinology<br>
+      Password: <code>RileyDemo!26</code>
+    </div>
+    <p class="small muted" style="margin-top:14px">
+      Each account has three fictional patients. Passwords are public demo values.
+      Device unlock requires HTTPS or localhost and registration after password sign-in.
+    </p>
+  </details>
+</section>
+
+<div id="workspace" hidden>
+  <header class="flex between">
+    <div>
+      <div class="brand">SMART<span>@</span>Clinic</div>
+      <div class="small muted" style="margin-top:7px">Clinical portal · Fictional demo</div>
+    </div>
+    <div class="flex">
+      <div>
+        <strong id="provider-name"></strong>
+        <div id="provider-focus" class="small muted"></div>
+      </div>
+      <button id="logout" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <nav aria-label="Provider workspace">
+    <div class="nav-inner">
+      <button type="button" data-page="home">Home</button>
+      <button type="button" data-page="calendar">Calendar</button>
+      <button type="button" data-page="settings">Settings</button>
+      <button type="button" data-page="chart" id="chart-tab" hidden>Patient chart</button>
+    </div>
+  </nav>
+
+  <main>
+    <div id="page"></div>
+    <p id="status" class="success" role="status" aria-live="polite"></p>
+    <footer>
+      Synthetic patient measurements through November 6, 2026.
+      Calendar appointments are locally simulated.
+      No real Epic/MyChart connection, secure clinical authentication,
+      validated alerts, diagnoses, or treatment recommendations.
+    </footer>
+  </main>
+</div>
+
+<dialog id="modal" aria-labelledby="modal-title">
+  <div class="dialog-heading flex between">
+    <h2 id="modal-title"></h2>
+    <button type="button" id="close-modal">Close</button>
+  </div>
+  <div id="modal-body" class="dialog-body"></div>
+</dialog>
+
+<script>
+(() => {
+"use strict";
+
+const $ = id => document.getElementById(id);
+const esc = value => String(value ?? "").replace(
+  /[&<>"']/g,
+  char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  })[char]
+);
+
+const END = "2026-11-06";
+const DAY = 86400000;
+
+const providers = [
+  {
+    id:"avery",name:"Avery Patel",password:"AveryDemo!26",
+    specialty:"Pulmonology",focus:"Asthma care",type:"asthma",
+    patientIds:["jordan","casey","sam"],
+    defaults:["symptoms","rescue","fev1","medication"]
+  },
+  {
+    id:"morgan",name:"Morgan Lee",password:"MorganDemo!26",
+    specialty:"Neurology",focus:"Headache & migraine",type:"migraine",
+    patientIds:["alex","jamie","robin"],
+    defaults:["symptoms","severity","acute","function"]
+  },
+  {
+    id:"riley",name:"Riley Chen",password:"RileyDemo!26",
+    specialty:"Endocrinology",focus:"Diabetes management",type:"diabetes",
+    patientIds:["taylor","drew","jessie"],
+    defaults:["glucose","range","lowEvents","medication"]
+  }
+];
+
+const definitions = [
+  ["jordan","Jordan Davis",34,"asthma",1],
+  ["casey","Casey Brooks",52,"asthma",2],
+  ["sam","Sam Rivera",67,"asthma",3],
+  ["alex","Alex Morgan",22,"migraine",4],
+  ["jamie","Jamie Wilson",39,"migraine",5],
+  ["robin","Robin Ellis",58,"migraine",6],
+  ["taylor","Taylor Chen",45,"diabetes",7],
+  ["drew","Drew Bennett",63,"diabetes",8],
+  ["jessie","Jessie Park",29,"diabetes",9]
+];
+
+function buildPatient([id,name,age,type,seed]) {
+  const days = Array.from({length:90},(_,i) => {
+    const date = new Date(
+      Date.parse(END+"T12:00:00Z")+(i-89)*DAY
+    ).toISOString().slice(0,10);
+
+    const answered = (i+seed)%10!==0;
+    const symptomatic = (i+seed)%(type==="asthma"?4:6)===0;
+
+    const response = answered ? {
+      id:id+"-report-"+i,
+      timestamp:date+"T19:00:00Z",
+      source:"patient",
+      activityLimited:symptomatic && (i+seed)%2===0,
+      ...(type==="diabetes" ? {
+        lowGlucoseEvents:(i+seed)%17===0?1:0
+      } : {
+        symptoms:symptomatic,
+        severity:symptomatic?3+(i+seed)%5:0,
+        ...(type==="asthma"
+          ? {rescueUses:symptomatic?1+i%2:0}
+          : {acuteMedication:symptomatic})
+      })
+    } : null;
+
+    const doses = Array.from({length:type==="asthma"?2:1},(_,j) => ({
+      id:id+"-dose-"+i+"-"+j,
+      scheduledAt:date+(j?"T20:00:00Z":"T08:00:00Z"),
+      source:"patient",
+      status:!answered?"no_report":
+        (i+seed+j)%19===0?"not_taken":"taken"
+    }));
+
+    const devices = [];
+
+    if (type==="asthma" && (i+seed)%3===0) {
+      const accepted = i%15!==0;
+      devices.push({
+        id:id+"-fev1-"+i,
+        timestamp:date+"T08:15:00Z",
+        source:"device",type:"fev1",
+        value:Number((2.6+seed*.08-i*.002+(i%4)*.02).toFixed(2)),
+        unit:"L",
+        quality:accepted?"accepted":"rejected",
+        qualityNote:accepted
+          ? "Synthetic quality flag: accepted."
+          : "Synthetic quality flag: rejected; excluded from accepted-reading view."
+      });
+    }
+
+    if (type==="diabetes" && (i+seed)%8!==0) {
+      [0,1].forEach(j => devices.push({
+        id:id+"-glucose-"+i+"-"+j,
+        timestamp:date+(j?"T18:00:00Z":"T08:00:00Z"),
+        source:"device",type:"glucose",
+        value:95+((i*13+seed*7+j*31)%110),
+        unit:"mg/dL",quality:"unknown",
+        qualityNote:"No measurement-quality metadata supplied."
+      }));
+    }
+
+    return {date,response,doses,devices};
+  });
+
+  return {id,name,age,type,days};
+}
+
+const patients = Object.fromEntries(definitions.map(def => {
+  const patient = buildPatient(def);
+  return [patient.id,patient];
+}));
+
+const metrics = {
+  symptoms:{label:"Symptom days",source:"Patient report",unit:"days"},
+  rescue:{label:"Rescue medication use",source:"Patient report",unit:"uses"},
+  fev1:{label:"Latest accepted FEV1",source:"Device",unit:"L"},
+  medication:{label:"Scheduled doses marked taken",source:"Patient report",unit:"%"},
+  severity:{label:"Maximum headache severity",source:"Patient report",unit:"0–10"},
+  acute:{label:"Acute medication days",source:"Patient report",unit:"days"},
+  function:{label:"Activity-limited days",source:"Patient report",unit:"days"},
+  glucose:{label:"Mean recorded glucose",source:"Device",unit:"mg/dL"},
+  range:{label:"Time in target range",source:"Unavailable",unit:"%"},
+  lowEvents:{label:"Reported low-glucose events",source:"Patient report",unit:"events"},
+  coverage:{label:"Reporting coverage",source:"Patient report",unit:"days"}
+};
+
+const allowedMetrics = {
+  asthma:["symptoms","rescue","fev1","medication","function","coverage"],
+  migraine:["symptoms","severity","acute","function","medication","coverage"],
+  diabetes:["glucose","range","lowEvents","medication","function","coverage"]
+};
+
+const state = {
+  provider:null,patient:null,page:"home",prefs:null,
+  notes:[],drafts:{},appointments:[],
+  calendarMode:"week",calendarDate:localDate(new Date()),
+  connection:null,deviceBusy:false
+};
+
+function read(key,fallback=null) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw===null?fallback:JSON.parse(raw);
+  } catch { return fallback; }
+}
+
+function store(key,value) {
+  try {
+    localStorage.setItem(key,JSON.stringify(value));
+    return true;
+  } catch { return false; }
+}
+
+function remove(key) {
+  try { localStorage.removeItem(key); return true; }
+  catch { return false; }
+}
+
+const providerKey = suffix =>
+  "smartclinic-complete-v1:"+state.provider.id+":"+suffix;
+
+const deviceKey = id => "smartclinic-complete-v1:"+id+":device";
+const roster = () => state.provider.patientIds.map(id => patients[id]);
+const currentPatient = () => patients[state.patient];
+const days = () => currentPatient().days.slice(-state.prefs.period);
+
+function notify(message) { $("status").textContent=message; }
+
+function localDate(date) {
+  return date.getFullYear()+"-"+
+    String(date.getMonth()+1).padStart(2,"0")+"-"+
+    String(date.getDate()).padStart(2,"0");
+}
+
+function parseDate(value) {
+  const [y,m,d]=value.split("-").map(Number);
+  return new Date(y,m-1,d,12);
+}
+
+function addDays(value,amount) {
+  const date=parseDate(value);
+  date.setDate(date.getDate()+amount);
+  return localDate(date);
+}
+
+function monday(value) {
+  return addDays(value,-((parseDate(value).getDay()+6)%7));
+}
+
+function dateLabel(value,options={
+  weekday:"long",month:"long",day:"numeric",year:"numeric"
+}) {
+  return parseDate(value).toLocaleDateString(undefined,options);
+}
+
+function timeLabel(value) {
+  const [h,m]=value.split(":").map(Number);
+  const date=new Date();
+  date.setHours(h,m,0,0);
+  return date.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+}
+
+function minutes(value) {
+  const [h,m]=value.split(":").map(Number);
+  return h*60+m;
+}
+
+function validDate(value) {
+  return typeof value==="string" &&
+    /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+    Number.isFinite(parseDate(value).getTime()) &&
+    localDate(parseDate(value))===value;
+}
+
+function validTime(value) {
+  return typeof value==="string" &&
+    /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+}
+
+function loadPreferences() {
+  const saved=read(providerKey("preferences"),{});
+  const selected=Array.isArray(saved?.metrics)
+    ? [...new Set(saved.metrics)]
+      .filter(id => allowedMetrics[state.provider.type].includes(id)).slice(0,4)
+    : [];
+
+  return {
+    metrics:selected.length?selected:[...state.provider.defaults],
+    period:[7,30,90].includes(saved?.period)?saved.period:30,
+    showTrend:saved?.showTrend!==false
+  };
+}
+
+function savePreferences() {
+  const saved=store(providerKey("preferences"),state.prefs);
+  notify(saved
+    ? "Settings saved for all three of your patients."
+    : "Settings apply this session; browser storage is unavailable.");
+}
+
+function findProvider(name) {
+  const normalized=name.trim().replace(/\s+/g," ").toLowerCase();
+  return providers.find(p => p.name.toLowerCase()===normalized);
+}
+
+function signIn(provider) {
+  state.provider=provider;
+  state.patient=null;
+  state.page="home";
+  state.prefs=loadPreferences();
+  state.notes=[];
+  state.drafts={};
+  state.calendarDate=localDate(new Date());
+  state.calendarMode="week";
+  state.connection=read(providerKey("connection"));
+  loadAppointments();
+
+  $("provider-name").textContent=provider.name;
+  $("provider-focus").textContent=provider.specialty+" · "+provider.focus;
+  $("password").value="";
+  $("login-error").textContent="";
+  $("login").hidden=true;
+  $("workspace").hidden=false;
+
+  store("smartclinic-last-name",provider.name);
+  render();
+}
+
+function signOut() {
+  if (state.deviceBusy) return;
+  if (Object.values(state.drafts).some(text => text.trim()) &&
+      !confirm("Discard unsaved notes and sign out?")) return;
+
+  $("modal").close();
+  $("modal-body").replaceChildren();
+  $("page").replaceChildren();
+
+  state.provider=null;
+  state.patient=null;
+  state.prefs=null;
+  state.notes=[];
+  state.drafts={};
+  state.appointments=[];
+  state.connection=null;
+
+  $("workspace").hidden=true;
+  $("login").hidden=false;
+  $("password").value="";
+  $("username").focus();
+}
+
+function navigate(page) {
+  if (!state.provider || state.deviceBusy) return;
+  if (page==="chart" && !state.patient) return;
+  state.page=page;
+  render();
+}
+
+function openPatient(id) {
+  if (!state.provider.patientIds.includes(id)) return;
+  state.patient=id;
+  $("modal").close();
+  navigate("chart");
+}
+
+function modal(title,html) {
+  $("modal-title").textContent=title;
+  $("modal-body").innerHTML=html;
+  if (!$("modal").open) $("modal").showModal();
+}
+
+function aggregate() {
+  const selected=days();
+  const reports=selected.map(d => d.response).filter(Boolean);
+  const doses=selected.flatMap(d => d.doses);
+  const devices=selected.flatMap(d => d.devices);
+
+  return {
+    days:selected,reports,doses,devices,
+    answered:reports.length,
+    missing:selected.length-reports.length,
+    symptoms:reports.filter(r => r.symptoms).length,
+    activity:reports.filter(r => r.activityLimited).length,
+    taken:doses.filter(d => d.status==="taken").length,
+    notTaken:doses.filter(d => d.status==="not_taken").length,
+    noReport:doses.filter(d => d.status==="no_report").length,
+    acceptedFEV:devices.filter(d => d.type==="fev1"&&d.quality==="accepted"),
+    glucose:devices.filter(d => d.type==="glucose")
+  };
+}
+
+function metricLabel(id) {
+  return id==="symptoms"&&state.provider.type==="migraine"
+    ? "Headache days":metrics[id].label;
+}
+
+function metricValue(id,a=aggregate()) {
+  const result={...metrics[id],label:metricLabel(id),
+    value:"Unavailable",detail:"",count:a.answered};
+
+  switch(id) {
+    case "symptoms":
+      result.value=a.answered?a.symptoms+" / "+a.answered:"Unavailable";
+      result.detail=a.missing+" days without answers.";
+      break;
+    case "rescue":
+      result.value=a.answered
+        ? String(a.reports.reduce((sum,r)=>sum+r.rescueUses,0)):"Unavailable";
+      result.detail="One daily report; "+a.missing+" days missing.";
+      break;
+    case "fev1": {
+      const last=a.acceptedFEV.at(-1);
+      const excluded=a.devices.filter(r=>r.type==="fev1"&&r.quality!=="accepted").length;
+      result.value=last?last.value.toFixed(2)+" L":"Unavailable";
+      result.count=a.acceptedFEV.length;
+      result.detail=(last?last.timestamp.slice(0,10)+" · ":"")+
+        excluded+" quality-rejected readings excluded.";
+      break;
+    }
+    case "medication":
+      result.value=a.doses.length?Math.round(a.taken/a.doses.length*100)+"%":"Unavailable";
+      result.count=a.taken+a.notTaken;
+      result.detail=a.taken+"/"+a.doses.length+" scheduled · "+
+        a.notTaken+" not taken · "+a.noReport+" unreported.";
+      break;
+    case "severity":
+      result.value=a.answered?Math.max(...a.reports.map(r=>r.severity))+" / 10":"Unavailable";
+      result.detail="Maximum reported score, not an average.";
+      break;
+    case "acute":
+      result.value=a.answered?a.reports.filter(r=>r.acuteMedication).length+" days":"Unavailable";
+      result.detail="Reported use, not verified ingestion.";
+      break;
+    case "function":
+      result.value=a.answered?a.activity+" days":"Unavailable";
+      result.detail="Among "+a.answered+" reporting days.";
+      break;
+    case "glucose":
+      result.count=a.glucose.length;
+      result.value=result.count
+        ? Math.round(a.glucose.reduce((sum,r)=>sum+r.value,0)/result.count)+" mg/dL"
+        : "Unavailable";
+      result.detail="Spot readings, not CGM. Quality metadata unavailable.";
+      break;
+    case "range":
+      result.count=0;
+      result.detail="No CGM series or prescribed target range supplied.";
+      break;
+    case "lowEvents":
+      result.value=a.answered
+        ? String(a.reports.reduce((sum,r)=>sum+r.lowGlucoseEvents,0)):"Unavailable";
+      result.detail="Patient-described events; not threshold-derived.";
+      break;
+    case "coverage":
+      result.value=a.answered+" / "+a.days.length;
+      result.detail="Days with a questionnaire response.";
+      break;
+  }
+  return result;
+}
+
+function eventsOn(date) {
+  return state.appointments.filter(a=>a.date===date)
+    .sort((a,b)=>a.time.localeCompare(b.time));
+}
+
+function appointmentMarkup(item,compact=false) {
+  return `
+    <button type="button" class="${compact?"appointment-row":"event"}"
+      data-event="${esc(item.id)}">
+      <span>${esc(timeLabel(item.time))} · ${item.duration} min</span>
+      <strong>${esc(patients[item.patient].name)}</strong>
+      <span class="small muted">${esc(item.type)}</span>
+    </button>`;
+}
+
+function renderHome() {
+  const today=localDate(new Date());
+  const lastName=state.provider.name.split(" ").at(-1);
+  const hour=new Date().getHours();
+  const greeting=hour<12?"A fresh start to your day.":
+    hour<17?"Your patients and plans, all in one place.":
+    "Everything together before you wrap up.";
+  const appointments=eventsOn(today);
+
+  return `
+    <section class="welcome">
+      <div class="date">${esc(dateLabel(today))}</div>
+      <h1 id="page-title" tabindex="-1">Welcome back, Dr. ${esc(lastName)}.</h1>
+      <p>${esc(greeting)}</p>
+    </section>
+
+    <div class="home-grid">
+      <section class="panel patient-panel">
+        <h2>Open a patient</h2>
+        <p class="small muted">
+          Your saved workspace settings apply to all three of your demo patients.
+        </p>
+        <label for="home-patient">Patient</label>
+        <select id="home-patient">
+          <option value="">Select a patient</option>
+          ${roster().map(p=>`
+            <option value="${p.id}" ${state.patient===p.id?"selected":""}>
+              ${esc(p.name)}
+            </option>`).join("")}
+        </select>
+        <div class="flex between">
+          <button class="primary" id="open-patient" ${state.patient?"":"disabled"}>
+            Open patient chart
+          </button>
+          <span class="small muted">${esc(state.provider.specialty)}</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="flex between">
+          <h2>Today’s appointments</h2>
+          <button class="link" data-page="calendar">View calendar</button>
+        </div>
+        ${appointments.length
+          ? appointments.map(a=>appointmentMarkup(a,true)).join("")
+          : '<p class="empty">No demo appointments today. A little breathing room.</p>'}
+      </section>
+    </div>
+
+    <p class="small muted" style="margin-top:22px">
+      Calendar dates follow your device’s local date.
+      Patient measurements are a fixed fictional dataset through ${END}.
+    </p>`;
+}
+
+function chartSVG() {
+  const type=state.provider.type;
+  const selected=days();
+  const maximum=type==="asthma"?4:type==="migraine"?10:250;
+  const unit=type==="asthma"?"L":type==="migraine"?"0–10":"mg/dL";
+  const title=type==="asthma"?"Lung function":type==="migraine"?"Headache severity":"Recorded glucose";
+
+  const records=selected.map(day=>{
+    let value=null;
+    if (type==="asthma") {
+      value=day.devices.find(r=>r.type==="fev1"&&r.quality==="accepted")?.value??null;
+    } else if (type==="migraine") {
+      value=day.response?.severity??null;
+    } else {
+      const readings=day.devices.filter(r=>r.type==="glucose");
+      value=readings.length?readings.reduce((sum,r)=>sum+r.value,0)/readings.length:null;
+    }
+    return {date:day.date,value};
+  });
+
+  const W=800,H=210,L=45,R=16,T=16,B=35;
+  const x=i=>L+i/Math.max(1,records.length-1)*(W-L-R);
+  const y=v=>T+(H-T-B)*(1-v/maximum);
+
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img"
+    aria-label="${esc(title+" in "+unit+". Exact readings are available in source records.")}">`;
+
+  for(let i=0;i<=4;i++) {
+    const value=maximum*i/4;
+    svg+=`<line x1="${L}" x2="${W-R}" y1="${y(value)}" y2="${y(value)}" stroke="#e2eeee"/>
+      <text x="${L-8}" y="${y(value)+4}" text-anchor="end" fill="#527380" font-size="11">${value}</text>`;
+  }
+
+  records.forEach((record,i)=>{
+    if(record.value===null)return;
+    const previous=records[i-1];
+    if(previous&&previous.value!==null) {
+      svg+=`<line x1="${x(i-1)}" y1="${y(previous.value)}"
+        x2="${x(i)}" y2="${y(record.value)}" stroke="#087e88" stroke-width="2"/>`;
+    }
+    svg+=`<circle cx="${x(i)}" cy="${y(record.value)}" r="3.5" fill="#087e88">
+      <title>${record.date}: ${record.value.toFixed(2)} ${unit}</title></circle>`;
+  });
+
+  svg+=`<text x="${L}" y="${H-8}" fill="#527380" font-size="11">${records[0].date}</text>
+    <text x="${W-R}" y="${H-8}" text-anchor="end" fill="#527380" font-size="11">${records.at(-1).date}</text></svg>`;
+
+  const explanation=type==="asthma"
+    ? "Only quality-accepted FEV1 readings are plotted."
+    : type==="migraine"
+      ? "One questionnaire per day. Zero means explicitly reported no headache."
+      : "Daily mean of recorded spot readings. Quality is unknown; no target classification.";
+
+  return `<section class="panel">
+    <div class="flex between">
+      <h2>${title}</h2>
+      <span class="small muted">${type==="migraine"?"Patient report":"Device"} · ${unit}</span>
+    </div>
+    ${svg}
+    <p class="small muted" style="margin:12px 0 0">
+      Gaps are not interpolated. ${explanation}
+    </p>
+  </section>`;
+}
+
+function sourceTable() {
+  return `<table>
+    <thead><tr>
+      <th>Date (UTC)</th><th>Patient report</th><th>Dose reports</th>
+      <th>Device readings</th><th>Evidence</th>
+    </tr></thead>
+    <tbody>${days().slice().reverse().map(day=>{
+      const report=day.response;
+      const description=!report?"No report":
+        state.provider.type==="diabetes"
+          ? report.lowGlucoseEvents+" reported low-glucose events"
+          : report.symptoms?"Symptoms reported":"No symptoms reported";
+      return `<tr>
+        <td>${day.date}</td>
+        <td>${description}</td>
+        <td>${day.doses.filter(d=>d.status==="taken").length} taken /
+          ${day.doses.filter(d=>d.status==="not_taken").length} not taken /
+          ${day.doses.filter(d=>d.status==="no_report").length} unreported</td>
+        <td>${day.devices.length?day.devices.map(r=>
+          esc(r.type.toUpperCase()+": "+r.value+" "+r.unit+" ("+r.quality+")")
+        ).join("<br>"):"No reading"}</td>
+        <td><button class="link" data-day="${day.date}">Details</button></td>
+      </tr>`;
+    }).join("")}</tbody>
+  </table>`;
+}
+
+function notesHTML() {
+  const entries=state.notes.filter(n=>n.patient===state.patient);
+  return entries.slice().reverse().map(note=>`
+    <article class="note">
+      <div class="small muted">Clinician-entered · ${esc(note.author)} · ${esc(note.time)}</div>
+      <p>${esc(note.text)}</p>
+    </article>
+  `).join("");
+}
+
+function renderChart() {
+  const patient=currentPatient();
+  const a=aggregate();
+  return `
+    <button data-page="home" style="margin-bottom:20px">← Back to my home</button>
+    <div class="page-heading flex between">
+      <div>
+        <h1 id="page-title" tabindex="-1">${esc(patient.name)}</h1>
+        <p class="muted" style="margin:0">
+          Age ${patient.age} · ${esc(state.provider.focus)} · Fictional patient
+        </p>
+      </div>
+      <div class="flex">
+        <div>
+          <label for="chart-patient">Patient</label>
+          <select id="chart-patient">
+            ${roster().map(p=>`<option value="${p.id}" ${p.id===state.patient?"selected":""}>
+              ${esc(p.name)}</option>`).join("")}
+          </select>
+        </div>
+        <div>
+          <label for="review-period">Review period</label>
+          <select id="review-period">
+            ${[7,30,90].map(n=>`<option value="${n}" ${n===state.prefs.period?"selected":""}>
+              Last ${n} days</option>`).join("")}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <p class="small muted">
+      ${a.days[0].date}–${a.days.at(-1).date} · UTC · Applies to all measures below
+    </p>
+
+    <div class="cards">
+      ${state.prefs.metrics.map(id=>{
+        const m=metricValue(id,a);
+        return `<button class="card" data-metric="${id}">
+          <h2>${esc(m.label)}</h2>
+          <span class="value">${esc(m.value)}</span>
+          <span class="description">${esc(m.detail)}</span>
+          <span class="source">
+            ${esc(m.source)} · ${m.count} observations/reports · ${esc(m.unit)}
+          </span>
+        </button>`;
+      }).join("")}
+    </div>
+
+    ${state.prefs.showTrend?chartSVG():""}
+
+    <div class="two-col">
+      <section class="panel">
+        <h2>Visit notes</h2>
+        <p class="small muted">
+          Supplemental clinician notes. Original reports stay unchanged.
+          Notes and drafts disappear on sign-out or refresh.
+        </p>
+        <label for="note-text">New note</label>
+        <textarea id="note-text" maxlength="4000" placeholder="Fictional notes only">${esc(state.drafts[state.patient]||"")}</textarea>
+        <button id="save-note" style="margin-top:10px">Save note</button>
+        <div id="notes">${notesHTML()}</div>
+      </section>
+
+      <section class="panel">
+        <h2>Record context</h2>
+        <p class="context-highlight">
+          ${a.answered} of ${a.days.length} days have questionnaire responses.
+        </p>
+        <p class="small muted">
+          ${a.missing} days have no response.
+          Missing entries do not establish why.
+        </p>
+        <p class="small muted">
+          Change since last visit: unavailable.
+          No prior encounter date is supplied.
+        </p>
+        <p class="small muted">
+          Device source does not guarantee measurement quality.
+          Medication reports do not establish ingestion.
+        </p>
+        ${state.connection?`
+          <h3>Mock Epic / MyChart context</h3>
+          <p class="small">
+            Fictional record ID: DEMO-${esc(patient.id.toUpperCase())}<br>
+            Simulated patient sharing: enabled
+          </p>
+          <p class="small muted">
+            No external records were fetched. This link changes no calculated measures.
+          </p>`:""}
+      </section>
+    </div>
+
+    <section class="panel">
+      <details id="source-details">
+        <summary><strong>Source records</strong></summary>
+        <p class="small muted" style="margin-top:14px">
+          Patient reports and device readings remain separate.
+          Missing entries are unknown, not negative responses.
+        </p>
+        <button id="export-csv" style="margin-bottom:12px">Export daily CSV</button>
+        <div class="table-wrap">${sourceTable()}</div>
+      </details>
+    </section>`;
+}
+
+const visitTypes=["Follow-up visit","Video follow-up","New patient visit","Care-plan review"];
+
+function loadAppointments() {
+  const saved=read(providerKey("calendar"));
+  if(Array.isArray(saved)) {
+    state.appointments=saved.filter(a=>
+      a&&typeof a.id==="string"&&state.provider.patientIds.includes(a.patient)&&
+      validDate(a.date)&&validTime(a.time)&&
+      [15,30,45,60].includes(a.duration)&&minutes(a.time)+a.duration<=1440&&
+      visitTypes.includes(a.type)
+    );
+    return;
+  }
+
+  const start=monday(localDate(new Date()));
+  const offset=state.provider.id==="morgan"?1:state.provider.id==="riley"?2:0;
+  state.appointments=Array.from({length:5},(_,i)=>({
+    id:"demo-"+i,
+    patient:state.provider.patientIds[i%3],
+    date:addDays(start,i),
+    time:String(9+offset+i%2).padStart(2,"0")+":00",
+    duration:30,
+    type:i%2?"Video follow-up":"Follow-up visit"
+  }));
+  store(providerKey("calendar"),state.appointments);
+}
+
+function renderCalendar() {
+  const weekly=state.calendarMode==="week";
+  const start=weekly?monday(state.calendarDate):state.calendarDate;
+  const dates=Array.from({length:weekly?7:1},(_,i)=>addDays(start,i));
+  const title=weekly
+    ? dateLabel(start,{month:"short",day:"numeric"})+" – "+
+      dateLabel(dates.at(-1),{month:"short",day:"numeric",year:"numeric"})
+    : dateLabel(start);
+  const today=localDate(new Date());
+
+  return `
+    <div class="page-heading flex between">
+      <div>
+        <h1 id="page-title" tabindex="-1">My calendar</h1>
+        <p class="muted" style="margin:0">${esc(state.provider.name)} · Fictional appointments</p>
+      </div>
+      <button id="new-appointment" class="primary">Add appointment</button>
+    </div>
+
+    <div class="toolbar">
+      <button id="previous-date" aria-label="Previous ${state.calendarMode}">←</button>
+      <button id="today-date">Today</button>
+      <button id="next-date" aria-label="Next ${state.calendarMode}">→</button>
+      <label for="calendar-date">Date</label>
+      <input id="calendar-date" type="date" value="${state.calendarDate}">
+      <button data-calendar-mode="day" aria-pressed="${!weekly}">Day</button>
+      <button data-calendar-mode="week" aria-pressed="${weekly}">Week</button>
+    </div>
+
+    <h2>${esc(title)}</h2>
+
+    <div class="calendar-scroll">
+      ${weekly?`<div class="week">
+        ${dates.map(date=>`
+          <section class="day-column ${date===today?"today":""}"
+            aria-label="${esc(dateLabel(date))}">
+            <h3 class="day-heading">${esc(dateLabel(date,{weekday:"short",day:"numeric"}))}</h3>
+            ${eventsOn(date).map(a=>appointmentMarkup(a)).join("")||
+              '<p class="small muted">No visits</p>'}
+          </section>`).join("")}
+      </div>`:`
+        <div class="day-view">
+          ${eventsOn(start).map(a=>appointmentMarkup(a)).join("")||
+            '<p class="empty">No appointments for this day.</p>'}
+        </div>`}
+    </div>
+    <p class="small muted" style="margin-top:16px">
+      Device-local timezone. Saved only in this browser.
+      No appointments are booked or synchronized with an EHR.
+    </p>`;
+}
+
+function viewAppointment(id) {
+  const a=state.appointments.find(item=>item.id===id);
+  if(!a)return;
+
+  modal("Appointment",`
+    <h2>${esc(patients[a.patient].name)}</h2>
+    <p>${esc(dateLabel(a.date))}<br>
+      ${esc(timeLabel(a.time))} · ${a.duration} minutes</p>
+    <p class="muted">${esc(a.type)}</p>
+    <div class="flex">
+      <button id="appointment-open" class="primary">Open patient chart</button>
+      <button id="appointment-edit">Edit</button>
+      <button id="appointment-delete">Delete</button>
+    </div>
+    <p class="small muted" style="margin-top:18px">Fictional appointment. No external schedule is changed.</p>
+  `);
+
+  $("appointment-open").onclick=()=>openPatient(a.patient);
+  $("appointment-edit").onclick=()=>appointmentForm(a);
+  $("appointment-delete").onclick=()=>{
+    if(!confirm("Delete this fictional appointment?"))return;
+    state.appointments=state.appointments.filter(item=>item.id!==a.id);
+    const saved=store(providerKey("calendar"),state.appointments);
+    $("modal").close();
+    render();
+    notify(saved?"Appointment deleted.":"Deleted this session; browser storage is unavailable.");
+  };
+}
+
+function appointmentForm(existing=null) {
+  const a=existing||{
+    patient:state.provider.patientIds[0],
+    date:state.calendarDate,time:"09:00",duration:30,type:"Follow-up visit"
+  };
+
+  modal(existing?"Edit appointment":"Add appointment",`
+    <form id="appointment-form">
+      <div class="field">
+        <label for="appointment-patient">Patient</label>
+        <select id="appointment-patient" style="width:100%">
+          ${roster().map(p=>`<option value="${p.id}" ${p.id===a.patient?"selected":""}>
+            ${esc(p.name)}</option>`).join("")}
+        </select>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="appointment-date">Date</label>
+          <input id="appointment-date" type="date" value="${a.date}" required>
+        </div>
+        <div class="field">
+          <label for="appointment-time">Time</label>
+          <input id="appointment-time" type="time" value="${a.time}" required>
+        </div>
+        <div class="field">
+          <label for="appointment-duration">Duration</label>
+          <select id="appointment-duration">
+            ${[15,30,45,60].map(n=>`<option value="${n}" ${n===a.duration?"selected":""}>
+              ${n} minutes</option>`).join("")}
+          </select>
+        </div>
+        <div class="field">
+          <label for="appointment-type">Visit type</label>
+          <select id="appointment-type">
+            ${visitTypes.map(type=>`<option ${type===a.type?"selected":""}>${esc(type)}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+      <p id="appointment-error" class="error" role="alert"></p>
+      <button class="primary">Save fictional appointment</button>
+      <p class="small muted" style="margin-top:15px">
+        Stored locally. This does not book a visit in Epic or MyChart.
+      </p>
+    </form>
+  `);
+
+  $("appointment-form").onsubmit=event=>{
+    event.preventDefault();
+    const updated={
+      id:existing?.id||"visit-"+Date.now()+"-"+Math.random().toString(36).slice(2,8),
+      patient:$("appointment-patient").value,
+      date:$("appointment-date").value,
+      time:$("appointment-time").value,
+      duration:Number($("appointment-duration").value),
+      type:$("appointment-type").value
+    };
+
+    if(!state.provider.patientIds.includes(updated.patient)||
+       !validDate(updated.date)||!validTime(updated.time)||
+       ![15,30,45,60].includes(updated.duration)||!visitTypes.includes(updated.type)) {
+      $("appointment-error").textContent="Choose a valid patient, date, time, and visit type.";
+      return;
+    }
+
+    const start=minutes(updated.time),end=start+updated.duration;
+    if(end>1440) {
+      $("appointment-error").textContent="The appointment must end on the same day.";
+      return;
+    }
+
+    const overlap=state.appointments.some(other=>
+      other.id!==updated.id&&other.date===updated.date&&
+      start<minutes(other.time)+other.duration&&end>minutes(other.time)
+    );
+
+    if(overlap) {
+      $("appointment-error").textContent="This overlaps another appointment. Choose a different time.";
+      return;
+    }
+
+    state.appointments=state.appointments.filter(item=>item.id!==updated.id);
+    state.appointments.push(updated);
+    const saved=store(providerKey("calendar"),state.appointments);
+    state.calendarDate=updated.date;
+    $("modal").close();
+    navigate("calendar");
+    notify(saved?"Appointment saved.":"Saved this session; browser storage is unavailable.");
+  };
+}
+
+function deviceContext() {
+  return window.isSecureContext&&
+    (location.protocol==="https:"||["localhost","127.0.0.1"].includes(location.hostname))&&
+    Boolean(window.PublicKeyCredential&&navigator.credentials);
+}
+
+function renderSettings() {
+  const registered=read(deviceKey(state.provider.id));
+  return `
+    <div class="page-heading">
+      <h1 id="page-title" tabindex="-1">My settings</h1>
+      <p class="muted">Set up your workspace once. Adjust it whenever you need.</p>
+    </div>
+
+    <section class="panel settings-panel">
+      <h2>Dashboard preferences</h2>
+      <p class="small muted">
+        Changes apply to all three patients for ${esc(state.provider.name)}.
+        They do not affect another provider’s workspace.
+      </p>
+      <form id="settings-form">
+        <h3>Overview measures</h3>
+        <p class="small muted">Choose one to four measures.</p>
+        ${allowedMetrics[state.provider.type].map(id=>`
+          <label class="check-row">
+            <input type="checkbox" name="metric" value="${id}"
+              ${state.prefs.metrics.includes(id)?"checked":""}>
+            ${esc(metricLabel(id))}
+          </label>`).join("")}
+
+        <div class="field">
+          <label for="settings-period">Default review period</label>
+          <select id="settings-period">
+            ${[7,30,90].map(n=>`<option value="${n}" ${n===state.prefs.period?"selected":""}>
+              Last ${n} days</option>`).join("")}
+          </select>
+        </div>
+
+        <label class="check-row">
+          <input id="settings-trend" type="checkbox" ${state.prefs.showTrend?"checked":""}>
+          Show one trend chart
+        </label>
+
+        <p id="settings-error" class="error" role="alert"></p>
+        <button class="primary">Save for all my patients</button>
+      </form>
+    </section>
+
+    <section class="panel settings-panel">
+      <h2>Device unlock</h2>
+      <p class="small muted">
+        Demonstrate signing in without typing the demo password.
+        Your device may offer Touch ID, Face ID, Windows Hello, or a device PIN.
+      </p>
+      <div class="notice">
+        Browser device-verification demonstration only.
+        No server verifies the passkey assertion, and this does not secure clinical records.
+        ${deviceContext()?"":"Open the prototype over HTTPS or localhost to use this feature."}
+      </div>
+      <div class="flex" style="margin-top:16px">
+        <button id="register-device" ${deviceContext()?"":"disabled"}>
+          ${registered?"Replace registration":"Register this device"}
+        </button>
+        <button id="forget-device" ${registered?"":"disabled"}>Forget device</button>
+      </div>
+      <p id="device-status" class="success" role="status"></p>
+    </section>
+
+    <section class="panel settings-panel">
+      <h2>Record connection</h2>
+      <p class="small muted">
+        ${state.connection?"Mock account linked. No live EHR connection.":"No mock EHR account linked."}
+      </p>
+      <button id="manage-connection">Manage demo Epic / MyChart connection</button>
+    </section>`;
+}
+
+function connectionDialog() {
+  const connected=Boolean(state.connection);
+
+  modal("Demo Epic / MyChart connection",`
+    <p>Preview a provider record connection and patient-shared MyChart context.</p>
+    <div class="notice">
+      Simulation only—not Epic login, SMART on FHIR authorization,
+      or a live MyChart connection. Do not enter real credentials.
+    </div>
+    <table style="margin-top:18px">
+      <tr><th>Environment</th><td>SMART@Clinic Fictional Clinic</td></tr>
+      <tr><th>Provider</th><td>${esc(state.provider.name)}</td></tr>
+      <tr><th>Patients</th><td>${roster().map(p=>esc(p.name)).join(", ")}</td></tr>
+      <tr><th>Access</th><td>Simulated read-only record context</td></tr>
+      <tr><th>MyChart</th><td>Simulated patient sharing; no patient login collected</td></tr>
+      <tr><th>Status</th><td>${connected?"Mock account linked":"Not linked"}</td></tr>
+    </table>
+    <p class="small muted" style="margin-top:16px">
+      Production integration requires an approved application, OAuth/SMART on FHIR,
+      patient matching, permissions, and server-side token handling.
+      Provider sign-in and patient consent are separate workflows.
+    </p>
+    <button id="toggle-connection" class="primary">
+      ${connected?"Disconnect mock account":"Approve simulated connection"}
+    </button>
+    <p id="connection-error" class="error" role="alert"></p>
+  `);
+
+  $("toggle-connection").onclick=()=>{
+    const next=connected?null:{
+      simulated:true,provider:state.provider.id,linkedAt:new Date().toISOString()
+    };
+    const saved=connected?remove(providerKey("connection")):store(providerKey("connection"),next);
+    if(!saved) {
+      $("connection-error").textContent="Browser storage is unavailable.";
+      return;
+    }
+    state.connection=next;
+    $("modal").close();
+    render();
+    notify(connected?"Mock account disconnected.":"Mock account linked. No external system was contacted.");
+  };
+}
+
+const encode=buffer=>btoa(String.fromCharCode(...new Uint8Array(buffer)));
+const decode=text=>Uint8Array.from(atob(text),c=>c.charCodeAt(0));
+const challenge=()=>crypto.getRandomValues(new Uint8Array(32));
+
+function setDeviceBusy(busy) {
+  state.deviceBusy=busy;
+  $("logout").disabled=busy;
+  $("password-login").disabled=busy;
+  $("device-login").disabled=busy;
+  document.querySelectorAll("[data-page]").forEach(b=>b.disabled=busy);
+  if($("register-device"))$("register-device").disabled=busy||!deviceContext();
+}
+
+function deviceMessage(message) {
+  if($("device-status"))$("device-status").textContent=message;
+}
+
+async function registerDevice() {
+  if(state.deviceBusy||!deviceContext())return;
+  const provider=state.provider;
+  setDeviceBusy(true);
+
+  try {
+    const available=await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if(!available)throw new Error("No supported device authenticator is available.");
+
+    const credential=await navigator.credentials.create({
+      publicKey:{
+        challenge:challenge(),
+        rp:{name:"SMART@Clinic fictional demo"},
+        user:{
+          id:new TextEncoder().encode("smartclinic-demo-"+provider.id),
+          name:provider.name,displayName:provider.name
+        },
+        pubKeyCredParams:[
+          {type:"public-key",alg:-7},
+          {type:"public-key",alg:-257}
+        ],
+        authenticatorSelection:{
+          authenticatorAttachment:"platform",
+          residentKey:"preferred",
+          userVerification:"required"
+        },
+        timeout:60000,attestation:"none"
+      }
+    });
+
+    if(!credential)throw new Error("Registration canceled.");
+
+    const saved=store(deviceKey(provider.id),{
+      id:encode(credential.rawId),createdAt:new Date().toISOString()
+    });
+
+    deviceMessage(saved
+      ? "Device registered for this demo. Sign out to try device unlock."
+      : "Credential created, but browser storage was unavailable.");
+
+    if(saved&&$("forget-device"))$("forget-device").disabled=false;
+  } catch(error) {
+    deviceMessage(error.name==="NotAllowedError"
+      ? "Registration canceled or not permitted. You can still use the demo password."
+      : error.message);
+  } finally {
+    setDeviceBusy(false);
+  }
+}
+
+async function deviceLogin() {
+  if(state.deviceBusy)return;
+
+  if(!deviceContext()) {
+    $("login-error").textContent=
+      "Device unlock requires HTTPS or localhost. Use the demo password for a local HTML file.";
+    return;
+  }
+
+  const provider=findProvider($("username").value);
+  if(!provider) {
+    $("login-error").textContent="Enter your demo first and last name.";
+    return;
+  }
+
+  const saved=read(deviceKey(provider.id));
+  if(!saved?.id) {
+    $("login-error").textContent=
+      "Sign in with your demo password first, then register this device in Settings.";
+    return;
+  }
+
+  setDeviceBusy(true);
+  try {
+    const credential=await navigator.credentials.get({
+      publicKey:{
+        challenge:challenge(),
+        allowCredentials:[{type:"public-key",id:decode(saved.id)}],
+        userVerification:"required",timeout:60000
+      }
+    });
+
+    if(!credential||encode(credential.rawId)!==saved.id) {
+      throw new Error("The credential did not match this demo account.");
+    }
+
+    /*
+      DEMO ONLY.
+      The browser requests device verification, but this HTML does not
+      perform server-side assertion-signature verification.
+      Never use this mechanism to authorize access to real records.
+    */
+    signIn(provider);
+  } catch(error) {
+    $("login-error").textContent=error.name==="NotAllowedError"
+      ? "Device unlock canceled or unavailable. Use the demo password."
+      : error.message;
+  } finally {
+    setDeviceBusy(false);
+  }
+}
+
+function showMetric(id) {
+  if(!allowedMetrics[state.provider.type].includes(id))return;
+  const m=metricValue(id);
+  const selected=days();
+
+  modal(m.label,`
+    <p style="font-size:27px"><strong>${esc(m.value)}</strong></p>
+    <p>${esc(m.detail)}</p>
+    <table>
+      <tr><th>Source</th><td>${esc(m.source)}</td></tr>
+      <tr><th>Unit</th><td>${esc(m.unit)}</td></tr>
+      <tr><th>Period</th><td>${selected[0].date}–${selected.at(-1).date}, UTC</td></tr>
+      <tr><th>Relevant observations/reports</th><td>${m.count}</td></tr>
+    </table>
+    <p class="small muted" style="margin-top:16px">
+      All values are synthetic. Original evidence and quality flags remain available.
+    </p>
+    <button id="inspect-sources">View source records</button>
+  `);
+
+  $("inspect-sources").onclick=()=>{
+    $("modal").close();
+    $("source-details").open=true;
+    $("source-details").scrollIntoView({behavior:"auto"});
+  };
+}
+
+function exportCSV() {
+  const rows=[
+    ["date_utc","patient_id","questionnaire_reported","symptoms_reported",
+     "severity","activity_limited","rescue_uses","acute_medication_reported",
+     "low_glucose_events_reported","scheduled_doses","marked_taken",
+     "marked_not_taken","no_dose_report","device_readings","origin"],
+    ...days().map(day=>[
+      day.date,state.patient,Boolean(day.response),
+      day.response?.symptoms??"unknown",
+      day.response?.severity??"",
+      day.response?.activityLimited??"unknown",
+      day.response?.rescueUses??"",
+      day.response?.acuteMedication??"",
+      day.response?.lowGlucoseEvents??"",
+      day.doses.length,
+      day.doses.filter(d=>d.status==="taken").length,
+      day.doses.filter(d=>d.status==="not_taken").length,
+      day.doses.filter(d=>d.status==="no_report").length,
+      day.devices.map(r=>r.type+":"+r.value+" "+r.unit+" ["+r.quality+"]").join("; "),
+      "locally_generated_fictional_demo"
+    ])
+  ];
+
+  const csv=rows.map(row=>row.map(value=>
+    '"'+String(value).replace(/"/g,'""')+'"'
+  ).join(",")).join("\r\n");
+
+  const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  const link=document.createElement("a");
+  link.href=url;
+  link.download="SMART-Clinic-fictional-"+state.patient+".csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  notify("Daily synthetic records exported. Notes are not included.");
+}
+
+function render() {
+  if(!state.provider)return;
+
+  $("status").textContent="";
+  $("chart-tab").hidden=!state.patient;
+  document.querySelectorAll("nav [data-page]").forEach(button=>{
+    if(button.dataset.page===state.page)button.setAttribute("aria-current","page");
+    else button.removeAttribute("aria-current");
+  });
+
+  $("page").innerHTML=state.page==="home"?renderHome():
+    state.page==="calendar"?renderCalendar():
+    state.page==="settings"?renderSettings():renderChart();
+
+  if(state.page==="home") {
+    $("home-patient").onchange=e=>$("open-patient").disabled=!e.target.value;
+    $("open-patient").onclick=()=>openPatient($("home-patient").value);
+  }
+
+  if(state.page==="chart") {
+    $("chart-patient").onchange=e=>openPatient(e.target.value);
+    $("review-period").onchange=e=>{
+      state.prefs.period=Number(e.target.value);
+      render();
+      savePreferences();
+    };
+    $("note-text").oninput=e=>state.drafts[state.patient]=e.target.value;
+    $("save-note").onclick=()=>{
+      const text=$("note-text").value.trim();
+      if(!text){notify("Write a fictional note first.");return;}
+      state.notes.push({
+        patient:state.patient,author:state.provider.name,
+        time:new Date().toISOString(),text
+      });
+      state.drafts[state.patient]="";
+      $("note-text").value="";
+      $("notes").innerHTML=notesHTML();
+      notify("Note saved for this session. Original reports are unchanged.");
+    };
+    $("export-csv").onclick=exportCSV;
+  }
+
+  if(state.page==="calendar") {
+    $("new-appointment").onclick=()=>appointmentForm();
+    $("previous-date").onclick=()=>{
+      state.calendarDate=addDays(state.calendarDate,state.calendarMode==="week"?-7:-1);
+      render();
+    };
+    $("next-date").onclick=()=>{
+      state.calendarDate=addDays(state.calendarDate,state.calendarMode==="week"?7:1);
+      render();
+    };
+    $("today-date").onclick=()=>{
+      state.calendarDate=localDate(new Date());render();
+    };
+    $("calendar-date").onchange=e=>{
+      if(validDate(e.target.value)){state.calendarDate=e.target.value;render();}
+    };
+  }
+
+  if(state.page==="settings") {
+    $("settings-form").onsubmit=e=>{
+      e.preventDefault();
+      const selected=[...document.querySelectorAll('input[name="metric"]:checked')]
+        .map(input=>input.value);
+      if(!selected.length||selected.length>4) {
+        $("settings-error").textContent="Choose between one and four measures.";
+        return;
+      }
+      state.prefs={
+        metrics:selected,
+        period:Number($("settings-period").value),
+        showTrend:$("settings-trend").checked
+      };
+      $("settings-error").textContent="";
+      savePreferences();
+    };
+    $("register-device").onclick=registerDevice;
+    $("forget-device").onclick=()=>{
+      if(state.deviceBusy)return;
+      const removed=remove(deviceKey(state.provider.id));
+      if(removed) {
+        render();
+        deviceMessage(
+          "Forgot the demo registration. A passkey may still remain in your device's password manager."
+        );
+      } else deviceMessage("Browser storage could not be updated.");
+    };
+    $("manage-connection").onclick=connectionDialog;
+  }
+
+  $("page-title")?.focus();
+}
+
+$("username").value=read("smartclinic-last-name","");
+
+$("login-form").onsubmit=e=>{
+  e.preventDefault();
+  if(state.deviceBusy)return;
+  const provider=findProvider($("username").value);
+  if(!provider||provider.password!==$("password").value) {
+    $("login-error").textContent="Check the demo username and password.";
+    return;
+  }
+  signIn(provider);
+};
+
+$("device-login").onclick=deviceLogin;
+$("logout").onclick=signOut;
+$("close-modal").onclick=()=>$("modal").close();
+
+document.addEventListener("click",event=>{
+  if(!state.provider||state.deviceBusy)return;
+
+  const page=event.target.closest("[data-page]");
+  if(page){navigate(page.dataset.page);return;}
+
+  const mode=event.target.closest("[data-calendar-mode]");
+  if(mode) {
+    state.calendarMode=mode.dataset.calendarMode;
+    render();
+    return;
+  }
+
+  const appointment=event.target.closest("[data-event]");
+  if(appointment){viewAppointment(appointment.dataset.event);return;}
+
+  const metric=event.target.closest("[data-metric]");
+  if(metric){showMetric(metric.dataset.metric);return;}
+
+  const dayButton=event.target.closest("[data-day]");
+  if(dayButton&&state.patient) {
+    const day=days().find(d=>d.date===dayButton.dataset.day);
+    if(day)modal("Original demo records · "+day.date,`
+      <p class="small muted">UTC timestamps. Source identifiers and quality flags retained.</p>
+      <pre>${esc(JSON.stringify(day,null,2))}</pre>
+    `);
+  }
+});
+
+})();
+</script>
+</body>
+</html>
