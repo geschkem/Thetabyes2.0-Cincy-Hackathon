@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SMART@Clinic</title>
+<style>
+:root{
+  --accent:#087e88;--ink:#132c3b;--muted:#426478;
+  --soft:#eaf8f6;--line:#d4e9e9;--paper:#fff;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0;background:white;color:var(--ink);
+  font:14px/1.55 "Avenir Next",Avenir,"Trebuchet MS",Arial,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button,input,select,textarea{
+  border:1px solid #bddfdf;border-radius:4px;
+  padding:10px 13px;background:white;color:var(--ink);
+}
+button{cursor:pointer;color:#086b76;font-weight:600}
+button:hover{background:#effaf8}
+button:disabled{opacity:.5;cursor:not-allowed}
+.primary{background:var(--accent);border-color:var(--accent);color:white}
+.primary:hover{background:#086771}
+button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,a:focus-visible,summary:focus-visible{
+  outline:3px solid #168d98;outline-offset:3px;
+}
+input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px}
+textarea{width:100%;min-height:125px;resize:vertical}
+label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#254e5e}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:30px;line-height:1.2;letter-spacing:-.8px;font-weight:750}
+h2{font-size:17px;color:#164e5c;font-weight:750}
+h3{font-size:14px;color:#164e5c}
+small,.small{font-size:12px}
+.muted{color:var(--muted)}
+.flex{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.between{justify-content:space-between}
+.brand{font-size:31px;font-weight:800;letter-spacing:-1px;color:#103849;line-height:1.2}
+.brand span{color:#088b95}
+.field{margin:18px 0}
+.notice{
+  padding:13px;background:#faf8f1;border:1px solid #e5ddc6;
+  border-radius:5px;color:#695a3b;font-size:12px;
+}
+.error{color:#a33333;font-size:13px;min-height:21px}
+.success{color:#08717a;font-size:13px;min-height:21px}
+.link{
+  border:0;padding:0;background:transparent;color:#08717a;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.login{
+  width:min(470px,calc(100% - 32px));margin:50px auto;
+  padding:32px;border:1px solid var(--line);
+  border-top:3px solid var(--accent);border-radius:7px;
+}
+.login h1{margin-top:30px;font-size:27px}
+.login input{width:100%}
+.login details{margin-top:22px;border-top:1px solid var(--line);padding-top:17px}
+.account{padding:12px 0;border-bottom:1px solid var(--line);font-size:12px}
+header{
+  padding:25px max(24px,calc((100vw - 1220px)/2));
+  border-bottom:2px solid #0c8790;background:white;
+}
+nav{position:sticky;top:0;z-index:5;background:white;border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1220px;margin:auto;padding:0 24px;display:flex;gap:10px;overflow:auto}
+nav button{
+  border:0;border-bottom:2px solid transparent;border-radius:0;
+  white-space:nowrap;padding:15px;color:#527380;
+}
+nav button[aria-current=page]{
+  color:#08717a;border-bottom-color:var(--accent);background:#f7fcfb;
+}
+main{max-width:1220px;margin:auto;padding:30px 24px 40px}
+.page-heading{margin-bottom:24px}
+.page-heading h1{margin-bottom:8px}
+.patient-title{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.patient-title .link{font-size:12px;font-weight:600}
+.welcome{padding:8px 0 27px}
+.welcome .date{color:#08717a;font-size:11px;font-weight:700;letter-spacing:1px}
+.welcome h1{font-size:33px;margin:15px 0 10px}
+.welcome p{color:#355c6c;margin-bottom:0}
+.panel{
+  padding:22px;background:white;border:1px solid var(--line);
+  border-radius:7px;margin-bottom:18px;
+}
+.home-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+.home-grid .panel{margin-bottom:0;padding:24px}
+.patient-panel{border-top:3px solid var(--accent)}
+.home-grid select{width:100%;margin:8px 0 18px}
+.cards{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;margin:22px 0;
+}
+.card{
+  padding:20px;border:1px solid var(--line);border-radius:7px;
+  display:flex;flex-direction:column;min-width:0;background:white;
+}
+.card-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:14px;margin-bottom:16px;flex-wrap:wrap;
+}
+.card-head h2{font-size:13px;line-height:1.5;margin:0;max-width:220px}
+.card-head h2 button{font-size:inherit;text-align:left;color:#254e5e}
+.visual-control label{font-size:10px;font-weight:600;margin-bottom:3px}
+.visual-control select{font-size:11px;padding:5px 7px;min-width:115px}
+.card .value{color:var(--accent);font-size:29px;font-weight:750;letter-spacing:-.8px}
+.card .description{font-size:12px;color:var(--muted);margin:9px 0 12px}
+.card .source{
+  margin-top:auto;padding-top:12px;border-top:1px solid #e5f0ef;
+  font-size:11px;color:#527380;
+}
+.card-chart{margin:8px 0}
+.card-chart svg{max-height:185px}
+.two-col{display:grid;grid-template-columns:1.35fr 1fr;gap:18px}
+svg{display:block;width:100%}
+.table-wrap{overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #e0eeee;vertical-align:top}
+th{background:#f7fcfb;color:#426478;font-size:11px}
+tbody tr:hover{background:#fbfefe}
+summary{cursor:pointer;color:#164e5c}
+.note{padding:14px 0;border-top:1px solid var(--line)}
+.note p{white-space:pre-wrap;margin:8px 0 0}
+.review-check{display:flex;align-items:center;gap:9px;font-weight:400;margin:14px 0}
+.speech-status{font-size:12px;color:#426478;min-height:22px;margin:10px 0}
+.listening{color:#a33333;font-weight:700}
+.context-highlight{padding:13px;background:#eaf8f5;border-radius:4px;color:#245563}
+.toolbar{
+  padding:13px 15px;border:1px solid var(--line);border-radius:6px;
+  display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:20px;
+}
+.toolbar label{margin:0}
+.toolbar button[aria-pressed=true]{background:var(--soft);border-color:#91cfca}
+.calendar-scroll{overflow:auto;border:1px solid var(--line);border-radius:7px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(135px,1fr));min-width:945px}
+.day-column{padding:16px 11px;min-height:330px;border-right:1px solid var(--line)}
+.day-column:last-child{border-right:0}
+.day-heading{font-size:12px;padding-bottom:12px;margin-bottom:18px;border-bottom:1px solid #e3efee}
+.today{background:#f7fcfb}
+.today .day-heading{color:var(--accent);border-bottom:2px solid var(--accent)}
+.event{
+  width:100%;text-align:left;background:#eaf8f5;
+  border:1px solid #cce9e5;border-left:3px solid #0a8991;
+  padding:11px;margin-bottom:9px;font-size:12px;
+}
+.event:hover{background:#ddf2ed}
+.event strong{display:block;margin:4px 0;color:#143849}
+.appointment-row{
+  display:block;width:100%;text-align:left;background:transparent;
+  border:0;border-bottom:1px solid #e0eeee;border-radius:0;padding:15px 6px;
+}
+.appointment-row:last-child{border-bottom:0}
+.appointment-row strong{display:block;margin:4px 0;color:#164e5c}
+.day-view{padding:20px}
+.day-view .event{max-width:680px;display:block}
+.empty{padding:20px 0;color:#527380;font-size:13px}
+.settings-panel{max-width:850px}
+.setting-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;padding:12px 0;border-bottom:1px solid #e0eeee;
+}
+.setting-row label{
+  display:flex;align-items:center;gap:10px;margin:0;font-size:13px;font-weight:400;
+}
+.setting-row select{font-size:12px;padding:7px;max-width:145px}
+footer{color:#4a6c78;font-size:11px;border-top:1px solid #e2eeee;padding-top:17px;margin-top:28px}
+dialog{
+  width:min(760px,calc(100% - 28px));max-height:88vh;
+  padding:0;border:1px solid #cfe4e4;border-radius:8px;color:var(--ink);
+}
+dialog::backdrop{background:#102f3b65}
+.dialog-heading{
+  padding:19px 24px;background:white;border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:1;
+}
+.dialog-heading h2{margin:0}
+.dialog-body{padding:24px}
+pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:850px){
+  .home-grid,.two-col{grid-template-columns:1fr}
+  .welcome h1{font-size:29px}
+}
+@media(max-width:600px){
+  header{padding:22px 18px}
+  .brand{font-size:26px}
+  main{padding:24px 16px}
+  .nav-inner{padding:0 8px;gap:3px}
+  nav button{padding:14px 12px}
+  .welcome h1{font-size:26px}
+  .panel,.home-grid .panel{padding:19px}
+  .cards{grid-template-columns:1fr}
+  .login{margin:30px auto;padding:26px}
+  .setting-row{align-items:flex-start}
+}
+
+/* Patient analytics: deliberately restrained, research-only presentation */
+.analytics-tabs{display:flex;gap:8px;margin:0 0 20px;border-bottom:1px solid var(--line);padding-bottom:12px;flex-wrap:wrap}
+.analytics-tabs button[aria-pressed="true"]{background:var(--soft);border-color:var(--accent);color:#075b62}
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.analytics-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 22px}
+.analytics-summary>div{border:1px solid var(--line);padding:14px;border-radius:5px}
+.analytics-summary strong{display:block;font-size:21px;color:var(--accent)}
+.analytics-summary span{font-size:11px;color:var(--muted)}
+.analytics-chart{width:100%;overflow-x:auto}
+.analytics-chart svg{min-width:520px;height:auto}
+.analytics-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:12px 0}
+.legend-swatch{display:inline-block;width:19px;height:0;border-top:3px solid #087e88;vertical-align:middle;margin-right:6px}
+.legend-swatch.forecast{border-color:#ad7c39;border-top-style:dashed}
+.legend-swatch.band{height:11px;border:0;background:#f4e6cd}
+.analytics-warning{border-left:3px solid #b18a52;background:#fcfaf5;padding:12px 14px;font-size:12px;color:#63543b;margin-bottom:18px}
+.analytics-insight{border:1px solid var(--line);border-radius:5px;padding:16px;margin:12px 0}
+.analytics-insight h3{margin:0 0 8px}
+.analytics-insight p{margin:7px 0;font-size:12px}
+@media(max-width:800px){.analytics-grid{grid-template-columns:1fr}.analytics-summary{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<section id="login" class="login">
+  <div class="brand">SMART<span>@</span>Clinic</div>
+  <h1>Provider sign-in</h1>
+  <p class="muted">Your patients, your schedule, your workspace.</p>
+
+  <form id="login-form">
+    <div class="field">
+      <label for="username">First and last name</label>
+      <input id="username" placeholder="Avery Patel" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="password">Demo password</label>
+      <input id="password" type="password" autocomplete="off" required>
+    </div>
+    <p id="login-error" class="error" role="alert"></p>
+    <button id="password-login" class="primary" style="width:100%">Sign in</button>
+  </form>
+
+  <button id="device-login" type="button" style="width:100%;margin-top:10px">
+    Use device unlock
+  </button>
+
+  <p class="small muted" style="margin-top:16px">
+    Fictional demonstration only. Do not enter a real password.
+    This browser-only prototype is not secure clinical authentication.
+  </p>
+
+  <details>
+    <summary class="small">Demo accounts</summary>
+    <div class="account">
+      <strong>Avery Patel</strong> · Pulmonology<br>
+      Password: <code>AveryDemo!26</code>
+    </div>
+    <div class="account">
+      <strong>Morgan Lee</strong> · Neurology<br>
+      Password: <code>MorganDemo!26</code>
+    </div>
+    <div class="account">
+      <strong>Riley Chen</strong> · Endocrinology<br>
+      Password: <code>RileyDemo!26</code>
+    </div>
+    <p class="small muted" style="margin-top:14px">
+      Each provider has three fictional patients.
+      Device unlock requires HTTPS or localhost and prior registration.
+    </p>
+  </details>
+
+  <button id="download-html" type="button" class="link small" style="margin-top:20px">
+    Download HTML file
+  </button>
+</section>
+
+<div id="workspace" hidden>
+  <header class="flex between">
+    <div>
+      <div class="brand">SMART<span>@</span>Clinic</div>
+      <div class="small muted" style="margin-top:7px">Clinical portal · Fictional demo</div>
+    </div>
+    <div class="flex">
+      <div>
+        <strong id="provider-name"></strong>
+        <div id="provider-focus" class="small muted"></div>
+      </div>
+      <button id="logout" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <nav aria-label="Provider workspace">
+    <div class="nav-inner">
+      <button type="button" data-page="home">Home</button>
+      <button type="button" data-page="calendar">Calendar</button>
+      <button type="button" data-page="global" id="global-tab">Global Settings</button>
+      <button type="button" data-page="chart" id="chart-tab" hidden>Patient chart</button>
+    </div>
+  </nav>
+
+  <main>
+    <div id="page"></div>
+    <p id="status" class="success" role="status" aria-live="polite"></p>
+    <footer>
+      Synthetic measurements through November 6, 2026.
+      Appointments are locally simulated.
+      No live Epic/MyChart connection, secure clinical authentication,
+      validated alerts, diagnoses, or treatment recommendations.
+    </footer>
+  </main>
+</div>
+
+<dialog id="modal" aria-labelledby="modal-title">
+  <div class="dialog-heading flex between">
+    <h2 id="modal-title"></h2>
+    <button type="button" id="close-modal">Close</button>
+  </div>
+  <div id="modal-body" class="dialog-body"></div>
+</dialog>
+
+<script>
+(() => {
+"use strict";
+
+/* Capture the pristine document before inserting session content. */
+const originalHTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+const $ = id => document.getElementById(id);
+const esc = value => String(value ?? "").replace(
+  /[&<>"']/g,
+  c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]
+);
+
+const END="2026-11-06";
+const DAY=86400000;
+
+const providers=[
+  {
+    id:"avery",name:"Avery Patel",password:"AveryDemo!26",
+    specialty:"Pulmonology",focus:"Asthma care",type:"asthma",
+    patients:["jordan","casey","sam"],
+    metrics:["symptoms","rescue","fev1","medication"]
+  },
+  {
+    id:"morgan",name:"Morgan Lee",password:"MorganDemo!26",
+    specialty:"Neurology",focus:"Headache & migraine",type:"migraine",
+    patients:["alex","jamie","robin"],
+    metrics:["symptoms","severity","acute","function"]
+  },
+  {
+    id:"riley",name:"Riley Chen",password:"RileyDemo!26",
+    specialty:"Endocrinology",focus:"Diabetes management",type:"diabetes",
+    patients:["taylor","drew","jessie"],
+    metrics:["glucose","range","lowEvents","medication"]
+  }
+];
+
+const definitions=[
+  ["jordan","Jordan Davis",34,"asthma",1],
+  ["casey","Casey Brooks",52,"asthma",2],
+  ["sam","Sam Rivera",67,"asthma",3],
+  ["alex","Alex Morgan",22,"migraine",4],
+  ["jamie","Jamie Wilson",39,"migraine",5],
+  ["robin","Robin Ellis",58,"migraine",6],
+  ["taylor","Taylor Chen",45,"diabetes",7],
+  ["drew","Drew Bennett",63,"diabetes",8],
+  ["jessie","Jessie Park",29,"diabetes",9]
+];
+
+function demoNoise(i,seed,salt=0){
+  const x=Math.sin((i+1)*12.9898+seed*78.233+salt*31.77)*43758.5453;
+  return (x-Math.floor(x));
+}
+function buildPatient([id,name,age,type,seed]){
+  // Deliberately varied fictional trajectories: improving, steady, increasing.
+  // Inputs are independent enough to avoid deterministic perfect correlations.
+  const scenario=(seed-1)%3; // 0 improving, 1 steady, 2 increasing
+  const days=Array.from({length:90},(_,i)=>{
+    const date=new Date(Date.parse(END+"T12:00:00Z")+(i-89)*DAY).toISOString().slice(0,10);
+    const answered=demoNoise(i,seed,1)>.11;
+    const sleepHours=Number(Math.max(4.1,Math.min(9.2,7.15+(demoNoise(i,seed,2)-.5)*2.8+Math.sin(i*.19+seed)*.35)).toFixed(1));
+    const stress=Math.max(1,Math.min(10,Math.round(4.5+(demoNoise(i,seed,3)-.5)*5.5+(7-sleepHours)*.55)));
+    const progression=scenario===0?(1-i/89)*.27:scenario===2?(i/89)*.29:.14;
+    const chance=Math.max(.08,Math.min(.84,.16+progression+(7-sleepHours)*.095+(stress-5)*.038));
+    const symptomatic=demoNoise(i,seed,4)<chance;
+    const severity=symptomatic?Math.max(1,Math.min(10,Math.round(2.5+(7-sleepHours)*.75+stress*.43+demoNoise(i,seed,5)*2.5))):0;
+    const activityLimited=symptomatic&&demoNoise(i,seed,6)<Math.min(.8,.13+severity*.075);
+    const response=answered?{
+      id:id+"-report-"+i,timestamp:date+"T19:00:00Z",source:"patient",
+      sleepHours,stress,activityLimited,
+      ...(type==="diabetes"?{lowGlucoseEvents:demoNoise(i,seed,7)<chance*.17?1:0}:{
+        symptoms:symptomatic,severity,
+        ...(type==="asthma"?{rescueUses:symptomatic?(demoNoise(i,seed,8)<.36?2:1):0}:
+          {acuteMedication:symptomatic&&demoNoise(i,seed,9)<.68})
+      })
+    }:null;
+    const doses=Array.from({length:type==="asthma"?2:1},(_,j)=>({
+      id:id+"-dose-"+i+"-"+j,scheduledAt:date+(j?"T20:00:00Z":"T08:00:00Z"),
+      source:"patient",status:!answered?"no_report":demoNoise(i,seed,10+j)<.08?"not_taken":"taken"
+    }));
+    const devices=[];
+    if(type==="asthma"&&demoNoise(i,seed,11)>.58){
+      const accepted=demoNoise(i,seed,12)>.08;
+      devices.push({id:id+"-fev1-"+i,timestamp:date+"T08:15:00Z",source:"device",type:"fev1",
+        value:Number(Math.max(1.2,2.75+seed*.04-(symptomatic?.16:0)+(demoNoise(i,seed,13)-.5)*.32).toFixed(2)),
+        unit:"L",quality:accepted?"accepted":"rejected",
+        qualityNote:accepted?"Synthetic quality flag: accepted.":"Rejected in synthetic quality metadata; excluded from accepted-reading displays."});
+    }
+    if(type==="diabetes"&&demoNoise(i,seed,14)>.13){
+      [0,1].forEach(j=>devices.push({id:id+"-glucose-"+i+"-"+j,
+        timestamp:date+(j?"T18:00:00Z":"T08:00:00Z"),source:"device",type:"glucose",
+        value:Math.round(Math.max(65,125+stress*3+(7-sleepHours)*5+(demoNoise(i,seed,15+j)-.5)*75)),
+        unit:"mg/dL",quality:"unknown",qualityNote:"Measurement-quality metadata not supplied."}));
+    }
+    return{date,response,doses,devices};
+  });
+  return{id,name,age,type,days};
+}
+
+const patients=Object.fromEntries(definitions.map(def=>{
+  const patient=buildPatient(def);
+  return[patient.id,patient];
+}));
+
+const metricDefinitions={
+  symptoms:{label:"Symptom days",source:"Patient report",unit:"days"},
+  rescue:{label:"Rescue medication use",source:"Patient report",unit:"uses"},
+  fev1:{label:"Latest accepted FEV1",source:"Device",unit:"L"},
+  medication:{label:"Scheduled doses marked taken",source:"Patient report",unit:"%"},
+  severity:{label:"Maximum headache severity",source:"Patient report",unit:"0–10"},
+  acute:{label:"Acute medication days",source:"Patient report",unit:"days"},
+  function:{label:"Activity-limited days",source:"Patient report",unit:"days"},
+  glucose:{label:"Mean recorded glucose",source:"Device",unit:"mg/dL"},
+  range:{label:"Time in target range",source:"Unavailable",unit:"%"},
+  lowEvents:{label:"Reported low-glucose events",source:"Patient report",unit:"events"},
+  coverage:{label:"Reporting coverage",source:"Patient report",unit:"days"}
+};
+
+const allowedMetrics={
+  asthma:["symptoms","rescue","fev1","medication","function","coverage"],
+  migraine:["symptoms","severity","acute","function","medication","coverage"],
+  diabetes:["glucose","range","lowEvents","medication","function","coverage"]
+};
+
+const visualTypes={
+  number:"Number",
+  bar:"Daily bars",
+  trend:"Daily trend"
+};
+
+const state={
+  provider:null,patient:null,page:"home",
+  defaults:null,overrides:{},
+  notes:[],drafts:{},reviewed:{},
+  analyticsView:false,appointments:[],calendarMode:"week",
+  calendarDate:localDate(new Date()),
+  connection:null,deviceBusy:false
+};
+
+let recognition=null;
+
+function read(key,fallback=null){
+  try{
+    const raw=localStorage.getItem(key);
+    return raw===null?fallback:JSON.parse(raw);
+  }catch{return fallback;}
+}
+function store(key,value){
+  try{localStorage.setItem(key,JSON.stringify(value));return true;}
+  catch{return false;}
+}
+function remove(key){
+  try{localStorage.removeItem(key);return true;}
+  catch{return false;}
+}
+
+const key=suffix=>"smartclinic-v4:"+state.provider.id+":"+suffix;
+const deviceKey=id=>"smartclinic-v4:"+id+":device";
+const roster=()=>state.provider.patients.map(id=>patients[id]);
+const patient=()=>patients[state.patient];
+
+function cleanConfig(raw,fallback){
+  const value=raw&&typeof raw==="object"?raw:{};
+  const selected=Array.isArray(value.metrics)
+    ?[...new Set(value.metrics)]
+      .filter(id=>allowedMetrics[state.provider.type].includes(id)).slice(0,4)
+    :[];
+  const visuals={...fallback.visuals};
+
+  if(value.visuals&&typeof value.visuals==="object"){
+    Object.entries(value.visuals).forEach(([id,type])=>{
+      if(allowedMetrics[state.provider.type].includes(id)&&
+         Object.hasOwn(visualTypes,type)){
+        visuals[id]=type;
+      }
+    });
+  }
+
+  return{
+    metrics:selected.length?selected:[...fallback.metrics],
+    period:[7,30,90].includes(value.period)?value.period:fallback.period,
+    showTrend:typeof value.showTrend==="boolean"?value.showTrend:fallback.showTrend,
+    visuals
+  };
+}
+
+function effectiveConfig(){
+  const override=state.patient?state.overrides[state.patient]:null;
+  return cleanConfig(override,state.defaults);
+}
+
+const selectedDays=()=>patient().days.slice(-effectiveConfig().period);
+
+function savePatientPatch(patch){
+  const old=state.overrides[state.patient]||{};
+  state.overrides[state.patient]={
+    ...old,...patch,
+    ...(patch.visuals?{visuals:{...(old.visuals||{}),...patch.visuals}}:{})
+  };
+  return store(key("patient-overrides"),state.overrides);
+}
+
+function notify(message){$("status").textContent=message;}
+
+function localDate(date){
+  return date.getFullYear()+"-"+
+    String(date.getMonth()+1).padStart(2,"0")+"-"+
+    String(date.getDate()).padStart(2,"0");
+}
+function parseDate(value){
+  const[y,m,d]=value.split("-").map(Number);
+  return new Date(y,m-1,d,12);
+}
+function addDays(value,n){
+  const d=parseDate(value);d.setDate(d.getDate()+n);return localDate(d);
+}
+function monday(value){
+  return addDays(value,-((parseDate(value).getDay()+6)%7));
+}
+function dateLabel(value,options={
+  weekday:"long",month:"long",day:"numeric",year:"numeric"
+}){
+  return parseDate(value).toLocaleDateString(undefined,options);
+}
+function timeLabel(value){
+  const[h,m]=value.split(":").map(Number);
+  const d=new Date();d.setHours(h,m,0,0);
+  return d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+}
+
+function findProvider(name){
+  const normalized=name.trim().replace(/\s+/g," ").toLowerCase();
+  return providers.find(p=>p.name.toLowerCase()===normalized);
+}
+
+function signIn(provider){
+  state.provider=provider;
+  state.patient=null;
+  state.analyticsView=false;
+  state.page="home";
+  state.defaults=cleanConfig(read(key("defaults")),{
+    metrics:[...provider.metrics],period:30,showTrend:true,visuals:{}
+  });
+
+  const stored=read(key("patient-overrides"),{});
+  state.overrides={};
+  if(stored&&typeof stored==="object"){
+    provider.patients.forEach(id=>{
+      if(stored[id]&&typeof stored[id]==="object")state.overrides[id]=stored[id];
+    });
+  }
+
+  state.notes=[];
+  state.drafts={};
+  state.reviewed={};
+  state.calendarDate=localDate(new Date());
+  state.calendarMode="week";
+  state.connection=read(key("connection"));
+  buildAppointments();
+
+  $("provider-name").textContent=provider.name;
+  $("provider-focus").textContent=provider.specialty+" · "+provider.focus;
+  $("password").value="";
+  $("login-error").textContent="";
+  $("login").hidden=true;
+  $("workspace").hidden=false;
+  store("smartclinic-last-name",provider.name);
+  render();
+}
+
+function stopDictation(abort=false){
+  if(!recognition)return;
+  if(abort){
+    const old=recognition;
+    recognition=null;
+    old.onresult=null;old.onend=null;old.onerror=null;
+    try{old.abort();}catch{}
+    return;
+  }
+  try{recognition.stop();}catch{}
+}
+
+function signOut(){
+  if(state.deviceBusy)return;
+  if(Object.values(state.drafts).some(text=>text.trim())&&
+     !confirm("Discard unsaved notes and sign out?"))return;
+
+  stopDictation(true);
+  $("modal").close();
+  $("modal-body").replaceChildren();
+  $("page").replaceChildren();
+
+  state.provider=null;state.patient=null;state.analyticsView=false;
+  state.defaults=null;state.overrides={};
+  state.notes=[];state.drafts={};state.reviewed={};
+  state.appointments=[];state.connection=null;
+
+  $("workspace").hidden=true;
+  $("login").hidden=false;
+  $("password").value="";
+  $("username").focus();
+}
+
+function navigate(page){
+  if(!state.provider||state.deviceBusy)return;
+
+  if(page==="global"&&(state.page!=="home"||state.patient))return;
+  if(page==="chart"&&!state.patient)return;
+
+  stopDictation(true);
+  if(page==="home")state.patient=null;
+  state.page=page;
+  render();
+}
+
+function openPatient(id){
+  if(!state.provider.patients.includes(id))return;
+  stopDictation(true);
+  state.patient=id;
+  state.analyticsView=false;
+  state.page="chart";
+  $("modal").close();
+  render();
+}
+
+function modal(title,html){
+  stopDictation(true);
+  updateSpeechUI("Dictation is stopped. Review any finalized text before saving.");
+  $("modal-title").textContent=title;
+  $("modal-body").innerHTML=html;
+  if(!$("modal").open)$("modal").showModal();
+}
+
+function aggregate(){
+  const days=selectedDays();
+  const reports=days.map(d=>d.response).filter(Boolean);
+  const doses=days.flatMap(d=>d.doses);
+  const devices=days.flatMap(d=>d.devices);
+  return{
+    days,reports,doses,devices,
+    answered:reports.length,missing:days.length-reports.length,
+    symptoms:reports.filter(r=>r.symptoms).length,
+    activity:reports.filter(r=>r.activityLimited).length,
+    taken:doses.filter(d=>d.status==="taken").length,
+    notTaken:doses.filter(d=>d.status==="not_taken").length,
+    noReport:doses.filter(d=>d.status==="no_report").length,
+    acceptedFEV:devices.filter(d=>d.type==="fev1"&&d.quality==="accepted"),
+    glucose:devices.filter(d=>d.type==="glucose")
+  };
+}
+
+function metricLabel(id){
+  return id==="symptoms"&&state.provider.type==="migraine"
+    ?"Headache days":metricDefinitions[id].label;
+}
+
+function metricValue(id,a=aggregate()){
+  const result={
+    ...metricDefinitions[id],label:metricLabel(id),
+    value:"Unavailable",detail:"",count:a.answered
+  };
+
+  switch(id){
+    case"symptoms":
+      result.value=a.answered?a.symptoms+" / "+a.answered:"Unavailable";
+      result.detail=a.missing+" days without answers.";break;
+    case"rescue":
+      result.value=a.answered
+        ?String(a.reports.reduce((s,r)=>s+r.rescueUses,0)):"Unavailable";
+      result.detail="One daily report; "+a.missing+" days missing.";break;
+    case"fev1":{
+      const last=a.acceptedFEV.at(-1);
+      const excluded=a.devices.filter(r=>r.type==="fev1"&&r.quality!=="accepted").length;
+      result.value=last?last.value.toFixed(2)+" L":"Unavailable";
+      result.count=a.acceptedFEV.length;
+      result.detail=(last?last.timestamp.slice(0,10)+" · ":"")+
+        excluded+" quality-rejected readings excluded.";break;
+    }
+    case"medication":
+      result.value=a.doses.length?Math.round(a.taken/a.doses.length*100)+"%":"Unavailable";
+      result.count=a.taken+a.notTaken;
+      result.detail=a.taken+"/"+a.doses.length+" scheduled · "+
+        a.notTaken+" not taken · "+a.noReport+" unreported.";break;
+    case"severity":
+      result.value=a.answered?Math.max(...a.reports.map(r=>r.severity))+" / 10":"Unavailable";
+      result.detail="Maximum reported score, not an average.";break;
+    case"acute":
+      result.value=a.answered?a.reports.filter(r=>r.acuteMedication).length+" days":"Unavailable";
+      result.detail="Reported use, not verified ingestion.";break;
+    case"function":
+      result.value=a.answered?a.activity+" days":"Unavailable";
+      result.detail="Among "+a.answered+" reporting days.";break;
+    case"glucose":
+      result.count=a.glucose.length;
+      result.value=result.count
+        ?Math.round(a.glucose.reduce((s,r)=>s+r.value,0)/result.count)+" mg/dL"
+        :"Unavailable";
+      result.detail="Spot readings, not CGM. Quality metadata unavailable.";break;
+    case"range":
+      result.count=0;
+      result.detail="No CGM series or prescribed target range supplied.";break;
+    case"lowEvents":
+      result.value=a.answered
+        ?String(a.reports.reduce((s,r)=>s+r.lowGlucoseEvents,0)):"Unavailable";
+      result.detail="Patient-described events, not threshold-derived.";break;
+    case"coverage":
+      result.value=a.answered+" / "+a.days.length;
+      result.detail="Days with a questionnaire response.";break;
+  }
+  return result;
+}
+
+function dailySeries(id){
+  return selectedDays().map(day=>{
+    const r=day.response;
+    let value=null;
+    switch(id){
+      case"symptoms":value=r?Number(r.symptoms):null;break;
+      case"rescue":value=r?r.rescueUses:null;break;
+      case"fev1":
+        value=day.devices.find(v=>v.type==="fev1"&&v.quality==="accepted")?.value??null;
+        break;
+      case"medication":
+        value=day.doses.length
+          ?day.doses.filter(d=>d.status==="taken").length/day.doses.length*100:null;
+        break;
+      case"severity":value=r?r.severity:null;break;
+      case"sleep":value=r?r.sleepHours:null;break;
+      case"stress":value=r?r.stress:null;break;
+      case"acute":value=r?Number(r.acuteMedication):null;break;
+      case"function":value=r?Number(r.activityLimited):null;break;
+      case"glucose":{
+        const readings=day.devices.filter(d=>d.type==="glucose");
+        value=readings.length?readings.reduce((s,d)=>s+d.value,0)/readings.length:null;
+        break;
+      }
+      case"lowEvents":value=r?r.lowGlucoseEvents:null;break;
+      case"coverage":value=r?1:0;break;
+      case"range":value=null;break;
+    }
+    return{date:day.date,value};
+  });
+}
+
+function seriesCaption(id){
+  const descriptions={
+    symptoms:"Daily symptom presence: 1 = reported, 0 = explicitly absent.",
+    rescue:"Reported rescue uses per day. One response per day.",
+    fev1:"Daily accepted FEV1 in liters. Rejected readings are excluded.",
+    medication:"Daily percentage of scheduled doses marked taken; unreported doses are not assumed taken or not taken.",
+    severity:"Daily reported severity, 0–10.",
+    acute:"Daily acute medication report: 1 = use, 0 = explicitly no use.",
+    function:"Daily activity limitation: 1 = reported, 0 = explicitly absent.",
+    glucose:"Daily mean of spot readings, mg/dL. Quality unknown.",
+    lowEvents:"Patient-described low-glucose events per day.",
+    coverage:"Daily questionnaire coverage: 1 = response, 0 = no response.",
+    range:"Unavailable: continuous glucose data and a prescribed range are not supplied."
+  };
+  return descriptions[id];
+}
+
+function plot(id,type="trend"){
+  const records=dailySeries(id);
+  const values=records.filter(r=>Number.isFinite(r.value)).map(r=>r.value);
+  if(!values.length)return'<div class="empty">No mapped observations available.</div>';
+
+  const maximum=id==="severity"?10:id==="medication"?100:
+    Math.max(1,...values)*(["symptoms","acute","function","coverage"].includes(id)?1:1.1);
+
+  const W=700,H=190,L=45,R=18,T=15,B=35;
+  const width=W-L-R,height=H-T-B;
+  const x=i=>L+i/Math.max(1,records.length-1)*width;
+  const y=v=>T+height*(1-v/maximum);
+
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img"
+    aria-label="${esc(metricLabel(id)+". "+seriesCaption(id)+" Exact values in source records.")}">`;
+
+  for(let i=0;i<=4;i++){
+    const v=maximum*i/4;
+    svg+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#e2eeee"/>
+      <text x="${L-8}" y="${y(v)+4}" text-anchor="end" fill="#527380" font-size="11">
+        ${Number(v.toFixed(1))}
+      </text>`;
+  }
+
+  records.forEach((record,i)=>{
+    if(record.value===null||!Number.isFinite(record.value))return;
+    const title=esc(record.date+": "+Number(record.value.toFixed(2)));
+    if(type==="bar"){
+      const w=Math.min(20,width/records.length*.65);
+      const h=Math.max(2,T+height-y(record.value));
+      svg+=`<rect x="${x(i)-w/2}" y="${T+height-h}" width="${w}" height="${h}" fill="#087e88">
+        <title>${title}</title></rect>`;
+    }else{
+      const previous=records[i-1];
+      if(previous&&Number.isFinite(previous.value)){
+        svg+=`<line x1="${x(i-1)}" y1="${y(previous.value)}"
+          x2="${x(i)}" y2="${y(record.value)}" stroke="#087e88" stroke-width="2"/>`;
+      }
+      svg+=`<circle cx="${x(i)}" cy="${y(record.value)}" r="3.2" fill="#087e88">
+        <title>${title}</title></circle>`;
+    }
+  });
+
+  svg+=`<text x="${L}" y="${H-8}" fill="#527380" font-size="11">${records[0].date}</text>
+    <text x="${W-R}" y="${H-8}" text-anchor="end" fill="#527380" font-size="11">
+      ${records.at(-1).date}</text></svg>`;
+  return svg;
+}
+
+function visualOptions(selected){
+  return Object.entries(visualTypes).map(([value,label])=>
+    `<option value="${value}" ${value===selected?"selected":""}>${label}</option>`
+  ).join("");
+}
+
+function cardHTML(id,a){
+  const m=metricValue(id,a);
+  const visual=effectiveConfig().visuals[id]||"number";
+  return`
+    <article class="card">
+      <div class="card-head">
+        <h2><button class="link" data-metric="${id}">${esc(m.label)}</button></h2>
+        <div class="visual-control">
+          <label for="visual-${id}">Change visual type</label>
+          <select id="visual-${id}" data-visual="${id}"
+            aria-label="Change visual type for ${esc(m.label)}">
+            ${visualOptions(visual)}
+          </select>
+        </div>
+      </div>
+      <div class="value">${esc(m.value)}</div>
+      <p class="description">${esc(m.detail)}</p>
+      ${visual!=="number"?`
+        <div class="card-chart">${plot(id,visual)}</div>
+        <p class="small muted">${esc(seriesCaption(id))}</p>
+      `:""}
+      <div class="source">
+        ${esc(m.source)} · ${m.count} observations/reports · ${esc(m.unit)}
+      </div>
+    </article>`;
+}
+
+function buildAppointments(){
+  const start=monday(localDate(new Date()));
+  const offset=state.provider.id==="morgan"?1:state.provider.id==="riley"?2:0;
+  state.appointments=Array.from({length:5},(_,i)=>({
+    id:"appointment-"+i,
+    patient:state.provider.patients[i%3],
+    date:addDays(start,i),
+    time:String(9+offset+i%2).padStart(2,"0")+":00",
+    duration:30,
+    type:i%2?"Video follow-up":"Follow-up visit"
+  }));
+}
+
+function eventsOn(date){
+  return state.appointments.filter(a=>a.date===date)
+    .sort((a,b)=>a.time.localeCompare(b.time));
+}
+
+function eventHTML(a,compact=false){
+  return`
+    <button class="${compact?"appointment-row":"event"}" data-event="${a.id}">
+      <span>${esc(timeLabel(a.time))} · ${a.duration} min</span>
+      <strong>${esc(patients[a.patient].name)}</strong>
+      <span class="small muted">${esc(a.type)}</span>
+    </button>`;
+}
+
+function renderHome(){
+  const today=localDate(new Date());
+  const hour=new Date().getHours();
+  const greeting=hour<12?"A fresh start to your day.":
+    hour<17?"Your patients and plans, all in one place.":
+    "Everything together before you wrap up.";
+  const appointments=eventsOn(today);
+
+  return`
+    <section class="welcome">
+      <div class="date">${esc(dateLabel(today))}</div>
+      <h1 id="page-title" tabindex="-1">
+        Welcome back, Dr. ${esc(state.provider.name.split(" ").at(-1))}.
+      </h1>
+      <p>${greeting}</p>
+    </section>
+
+    <div class="home-grid">
+      <section class="panel patient-panel">
+        <h2>Open a patient</h2>
+        <p class="small muted">
+          Choose a patient to review their measurements and notes.
+        </p>
+        <label for="home-patient">Patient</label>
+        <select id="home-patient">
+          <option value="">Select a patient</option>
+          ${roster().map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("")}
+        </select>
+        <div class="flex between">
+          <button class="primary" id="open-patient" disabled>Open patient chart</button>
+          <span class="small muted">${esc(state.provider.specialty)}</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="flex between">
+          <h2>Today’s appointments</h2>
+          <button class="link" data-page="calendar">View calendar</button>
+        </div>
+        ${appointments.length
+          ?appointments.map(a=>eventHTML(a,true)).join("")
+          :'<p class="empty">No demo appointments today. A little breathing room.</p>'}
+      </section>
+    </div>
+
+    <p class="small muted" style="margin-top:22px">
+      Set provider-wide defaults in Global Settings.
+      Patient-specific adjustments can be made from each chart.
+    </p>`;
+}
+
+function notesHTML(){
+  return state.notes.filter(n=>n.patient===state.patient).slice().reverse().map(n=>`
+    <article class="note">
+      <div class="small muted">
+        Clinician-entered · ${esc(n.author)} · ${esc(n.time)} · Reviewed
+      </div>
+      <p>${esc(n.text)}</p>
+    </article>`).join("");
+}
+
+function sourceTable(){
+  return`<table>
+    <thead><tr>
+      <th>Date (UTC)</th><th>Patient report</th><th>Dose reports</th>
+      <th>Device readings</th><th>Evidence</th>
+    </tr></thead>
+    <tbody>${selectedDays().slice().reverse().map(day=>{
+      const report=day.response;
+      const description=!report?"No report":
+        state.provider.type==="diabetes"
+          ?report.lowGlucoseEvents+" reported low-glucose events"
+          :report.symptoms?"Symptoms reported":"No symptoms reported";
+      return`<tr>
+        <td>${day.date}</td>
+        <td>${description}</td>
+        <td>${day.doses.filter(d=>d.status==="taken").length} taken /
+          ${day.doses.filter(d=>d.status==="not_taken").length} not taken /
+          ${day.doses.filter(d=>d.status==="no_report").length} unreported</td>
+        <td>${day.devices.length?day.devices.map(r=>
+          esc(r.type.toUpperCase()+": "+r.value+" "+r.unit+" ("+r.quality+")")
+        ).join("<br>"):"No reading"}</td>
+        <td><button class="link" data-day="${day.date}">Details</button></td>
+      </tr>`;
+    }).join("")}</tbody>
+  </table>`;
+}
+
+function renderChart(){
+  if(state.analyticsView)return renderAnalytics();
+  const p=patient(),a=aggregate(),config=effectiveConfig();
+  const trendId=state.provider.type==="asthma"?"fev1":
+    state.provider.type==="migraine"?"severity":"glucose";
+
+  return`
+    <button data-page="home" style="margin-bottom:20px">← Back to my home</button>
+
+    <div class="page-heading flex between">
+      <div>
+        <div class="patient-title">
+          <h1 id="page-title" tabindex="-1">${esc(p.name)}</h1>
+          <button class="link" id="edit-patient-dashboard">Edit Patient Dashboard</button>
+        </div>
+        <p class="muted" style="margin:0">
+          Age ${p.age} · ${esc(state.provider.focus)} · Fictional patient
+        </p>
+      </div>
+      <div class="flex">
+        <div>
+          <label for="chart-patient">Patient</label>
+          <select id="chart-patient">
+            ${roster().map(item=>`<option value="${item.id}" ${item.id===p.id?"selected":""}>
+              ${esc(item.name)}</option>`).join("")}
+          </select>
+        </div>
+        <div>
+          <label for="review-period">Review period</label>
+          <select id="review-period">
+            ${[7,30,90].map(n=>`<option value="${n}" ${n===config.period?"selected":""}>
+              Last ${n} days</option>`).join("")}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <p class="small muted">
+      ${a.days[0].date}–${a.days.at(-1).date} · UTC ·
+      Display changes here apply only to ${esc(p.name)}.
+    </p>
+
+    <div class="analytics-tabs" aria-label="Patient chart sections">
+      <button type="button" data-chart-section="overview" aria-pressed="true">Patient overview</button>
+      <button type="button" data-chart-section="analytics" aria-pressed="false">Trends &amp; Forecasts · Experimental</button>
+    </div>
+    <div class="cards">${config.metrics.map(id=>cardHTML(id,a)).join("")}</div>
+
+    ${config.showTrend?`
+      <section class="panel">
+        <h2>Supporting trend</h2>
+        ${plot(trendId,"trend")}
+        <p class="small muted" style="margin:12px 0 0">
+          ${esc(seriesCaption(trendId))} Gaps are not interpolated.
+        </p>
+      </section>`:""}
+
+    <div class="two-col">
+      <section class="panel">
+        <h2>Provider notes</h2>
+        <p class="small muted">
+          Type or dictate a draft, then review it before saving.
+          Notes stay in this session and do not change patient reports.
+        </p>
+        <label for="note-text">Draft note</label>
+        <textarea id="note-text" maxlength="5000"
+          placeholder="Fictional notes only">${esc(state.drafts[p.id]||"")}</textarea>
+        <div class="flex" style="margin-top:10px">
+          <button id="speech-start">Start dictation</button>
+          <button id="speech-stop" disabled>Stop dictation</button>
+        </div>
+        <p id="speech-status" class="speech-status" role="status" aria-live="polite">
+          Dictation is optional. You can always type instead.
+        </p>
+        <label class="review-check">
+          <input id="review-note" type="checkbox" ${state.reviewed[p.id]?"checked":""}>
+          I reviewed this note for accuracy.
+        </label>
+        <button id="save-note" class="primary">Save reviewed note</button>
+        <details style="margin-top:15px">
+          <summary class="small">Dictation privacy</summary>
+          <p class="small muted" style="margin-top:8px">
+            Browser speech recognition may send audio to the browser vendor.
+            Use fictional information only. Production clinical dictation
+            requires an approved service and privacy controls.
+            Changing pages stops dictation; only finalized text is retained.
+          </p>
+        </details>
+        <div id="notes" style="margin-top:16px">${notesHTML()}</div>
+      </section>
+
+      <section class="panel">
+        <h2>Record context</h2>
+        <p class="context-highlight">
+          ${a.answered} of ${a.days.length} days have questionnaire responses.
+        </p>
+        <p class="small muted">
+          ${a.missing} days have no response. Missing entries do not establish why.
+        </p>
+        <p class="small muted">
+          Change since last visit: unavailable. No prior encounter date is supplied.
+        </p>
+        <p class="small muted">
+          Device source does not guarantee quality. Medication reports do not establish ingestion.
+        </p>
+        ${state.connection?`
+          <h3>Mock Epic / MyChart context</h3>
+          <p class="small">
+            Fictional ID: DEMO-${esc(p.id.toUpperCase())}<br>
+            Simulated patient sharing: enabled
+          </p>
+          <p class="small muted">
+            No external records were fetched. This does not change calculated measurements.
+          </p>`:""}
+      </section>
+    </div>
+
+    <section class="panel">
+      <details id="source-details">
+        <summary><strong>Source records</strong></summary>
+        <p class="small muted" style="margin-top:14px">
+          Original patient reports and device readings remain separate.
+          Small baseline bars indicate explicit zero; gaps indicate unavailable values.
+        </p>
+        <button id="export-csv" style="margin-bottom:12px">Export daily CSV</button>
+        <div class="table-wrap">${sourceTable()}</div>
+      </details>
+    </section>`;
+}
+
+
+/* Research-only exploratory analytics. All calculations run locally on synthetic data. */
+function analyticsVariables(){
+  const type=state.provider.type;
+  if(type==="asthma")return [
+    {id:"symptoms",label:"Symptom presence",unit:"0–1",min:0,max:1},
+    {id:"rescue",label:"Reported rescue uses",unit:"uses/day",min:0},
+    {id:"fev1",label:"Accepted FEV1",unit:"L",min:0}
+  ];
+  if(type==="migraine")return [
+    {id:"severity",label:"Reported headache severity",unit:"0–10",min:0,max:10},
+    {id:"symptoms",label:"Headache presence",unit:"0–1",min:0,max:1},
+    {id:"acute",label:"Reported acute medication use",unit:"0–1",min:0,max:1}
+  ];
+  return [
+    {id:"glucose",label:"Mean spot glucose",unit:"mg/dL",min:0},
+    {id:"lowEvents",label:"Reported low-glucose events",unit:"events/day",min:0}
+  ];
+}
+function analyticsMetric(){
+  const options=analyticsVariables();
+  return options.find(o=>o.id===state.analyticsMetric)||options[0];
+}
+function mean(xs){return xs.reduce((a,b)=>a+b,0)/xs.length;}
+function sd(xs){if(xs.length<2)return 0;const m=mean(xs);return Math.sqrt(xs.reduce((a,b)=>a+(b-m)**2,0)/(xs.length-1));}
+function clamp(x,def){return Math.max(def.min??-Infinity,Math.min(def.max??Infinity,x));}
+function weeklyBurden(records,metric){
+  const complete=records.slice(-(Math.floor(records.length/7)*7));
+  const weeks=[];
+  for(let i=0;i+7<=complete.length;i+=7){
+    const chunk=complete.slice(i,i+7);
+    const valid=chunk.filter(x=>Number.isFinite(x.value));
+    // Require 5/7 daily responses; never count missing days as symptom-free.
+    weeks.push({date:chunk.at(-1).date,observed:valid.length,
+      value:valid.length>=5?valid.reduce((a,r)=>a+(metric==="symptoms"?Number(r.value>0):r.value),0)/valid.length*7:null});
+  }
+  return weeks;
+}
+function computeWeeklyForecast(weeks){
+  const valid=weeks.filter(w=>Number.isFinite(w.value));
+  if(valid.length<4)return {ok:false,reason:"At least four sufficiently reported full weeks are needed. Select 90 days of history for the demonstration."};
+  const vals=valid.map(w=>w.value),last=vals.slice(-4);
+  const previous=vals.slice(-Math.min(8,vals.length),-4);
+  const baseline=mean(last),prior=previous.length?mean(previous):baseline;
+  const change=baseline-prior;
+  const direction=change>.65?"Increasing":change<-.65?"Decreasing":"Relatively stable";
+  // A conservative bounded trend, not an estimate of future medical events.
+  const forecast=Math.max(0,Math.min(7,baseline+Math.max(-.8,Math.min(.8,change*.35))));
+  const errors=[];const flatErrors=[];
+  for(let i=3;i<vals.length;i++){
+    const training=vals.slice(Math.max(0,i-4),i);
+    const baselinePred=mean(training);
+    errors.push(Math.abs(vals[i]-baselinePred));
+    flatErrors.push(Math.abs(vals[i]-vals[i-1]));
+  }
+  const mae=mean(errors),naive=mean(flatErrors);
+  // If no demonstrated advantage over last-week persistence, don't imply model superiority.
+  const trustworthy=errors.length>=3&&mae<naive*.98;
+  const spread=Math.max(1,Math.min(3,mae*1.5));
+  return {ok:true,forecast,low:Math.max(0,forecast-spread),high:Math.min(7,forecast+spread),
+    direction,baseline,latest:vals.at(-1),mae,naive,trustworthy,used:valid.length,
+    method:"Weekly symptom-day estimates use observed responses, scaled to seven days only when at least five responses exist. The next-week exploratory estimate is a conservative four-week mean with a capped recent-trend adjustment. Backtesting compares a rolling-mean forecast against the prior-week baseline. The displayed range is a heuristic visualization, not a calibrated interval."};
+}
+function weeklyForecastSVG(weeks,result){
+  const W=800,H=290,L=55,R=28,T=28,B=45,w=W-L-R,h=H-T-B;
+  const x=i=>L+(i/Math.max(1,weeks.length))*w;
+  const y=v=>T+h-(v/7)*h;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly observed symptom burden and separate exploratory next-week estimate. Missing weeks have gaps.">`;
+  for(let k=0;k<=7;k++){const yy=y(k);svg+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#e2eeee"/><text x="${L-11}" y="${yy+4}" text-anchor="end" font-size="11" fill="#527380">${k}</text>`;}
+  const bx=x(weeks.length-.5);svg+=`<rect x="${bx}" y="${T}" width="${W-R-bx}" height="${h}" fill="#fcfaf5"/>`;
+  weeks.forEach((wk,i)=>{if(!Number.isFinite(wk.value))return;
+    const xx=x(i),yy=y(wk.value),prev=weeks[i-1];
+    if(prev&&Number.isFinite(prev.value))svg+=`<line x1="${x(i-1)}" y1="${y(prev.value)}" x2="${xx}" y2="${yy}" stroke="#087e88" stroke-width="3"/>`;
+    svg+=`<circle cx="${xx}" cy="${yy}" r="5" fill="#087e88"><title>Week ending ${wk.date}: ${wk.value.toFixed(1)} estimated symptom days; ${wk.observed}/7 observed</title></circle>`;
+  });
+  const fx=x(weeks.length),fy=y(result.forecast),last=weeks.at(-1);
+  svg+=`<rect x="${fx-12}" y="${y(result.high)}" width="24" height="${y(result.low)-y(result.high)}" rx="7" fill="#f4e6cd"/>`;
+  if(Number.isFinite(last.value))svg+=`<line x1="${x(weeks.length-1)}" y1="${y(last.value)}" x2="${fx}" y2="${fy}" stroke="#ad7c39" stroke-width="3" stroke-dasharray="7 5"/>`;
+  svg+=`<circle cx="${fx}" cy="${fy}" r="6" fill="#ad7c39"><title>Next week exploratory estimate ${result.forecast.toFixed(1)} days; approximate visual range ${result.low.toFixed(1)}–${result.high.toFixed(1)}</title></circle>`;
+  weeks.forEach((wk,i)=>{if(i%Math.max(1,Math.ceil(weeks.length/6))===0)svg+=`<text x="${x(i)}" y="${H-15}" text-anchor="middle" fill="#527380" font-size="10">${wk.date.slice(5)}</text>`;});
+  svg+=`<text x="${fx}" y="${H-15}" text-anchor="middle" fill="#ad7c39" font-size="11">Next week</text></svg>`;
+  return svg;
+}
+function pearson(xs,ys){const n=xs.length,mx=mean(xs),my=mean(ys),dx=xs.map(x=>x-mx),dy=ys.map(y=>y-my),den=Math.sqrt(dx.reduce((a,b)=>a+b*b,0)*dy.reduce((a,b)=>a+b*b,0));return den>0?dx.reduce((a,v,i)=>a+v*dy[i],0)/den:null;}
+function patternCandidates(){
+  const type=state.provider.type;
+  const candidates=type==="asthma"?[
+    ["sleep","symptoms","Sleep duration (hours)","Symptom presence"],
+    ["stress","symptoms","Reported stress (1–10)","Symptom presence"],
+    ["sleep","rescue","Sleep duration (hours)","Rescue uses"]
+  ]:type==="migraine"?[
+    ["sleep","severity","Sleep duration (hours)","Headache severity"],
+    ["stress","severity","Reported stress (1–10)","Headache severity"],
+    ["sleep","function","Sleep duration (hours)","Activity limitation"]
+  ]:[
+    ["sleep","glucose","Sleep duration (hours)","Mean spot glucose"],
+    ["stress","glucose","Reported stress (1–10)","Mean spot glucose"],
+    ["sleep","lowEvents","Sleep duration (hours)","Reported low-glucose events"]
+  ];
+  const map=Object.fromEntries([...new Set(candidates.flatMap(x=>x.slice(0,2)))].map(id=>[id,dailySeries(id)]));
+  return candidates.map(([a,b,al,bl])=>{
+    const pairs=map[a].map((r,i)=>[r.value,map[b][i].value]).filter(v=>v.every(Number.isFinite));
+    const n=pairs.length,distinctA=new Set(pairs.map(p=>p[0])).size,distinctB=new Set(pairs.map(p=>p[1])).size;
+    const r=n>=12&&distinctA>=2&&distinctB>=2?pearson(pairs.map(p=>p[0]),pairs.map(p=>p[1])):null;
+    return {a,b,al,bl,n,r,pairs};
+  });
+}
+function scatterSVG(pattern){
+  const W=540,H=260,L=48,R=22,T=20,B=45,w=W-L-R,h=H-T-B;
+  const xs=pattern.pairs.map(p=>p[0]),ys=pattern.pairs.map(p=>p[1]);
+  let minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys);
+  if(minx===maxx)maxx+=1;if(miny===maxy)maxy+=1;
+  const x=v=>L+(v-minx)/(maxx-minx)*w,y=v=>T+h-(v-miny)/(maxy-miny)*h;
+  let out=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Scatterplot of ${esc(pattern.al)} versus ${esc(pattern.bl)} for paired reporting days.">`;
+  for(let i=0;i<=4;i++){let yy=T+i*h/4;out+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e2eeee"/>`;}
+  pattern.pairs.forEach(([a,b])=>out+=`<circle cx="${x(a)}" cy="${y(b)}" r="4.5" fill="#087e88" fill-opacity=".4"><title>${esc(pattern.al)}: ${a}; ${esc(pattern.bl)}: ${b}</title></circle>`);
+  out+=`<text x="${W/2}" y="${H-9}" text-anchor="middle" fill="#527380" font-size="12">${esc(pattern.al)}</text><text x="${L-4}" y="${H-28}" text-anchor="start" fill="#527380" font-size="10">${minx.toFixed(1)}</text><text x="${W-R}" y="${H-28}" text-anchor="end" fill="#527380" font-size="10">${maxx.toFixed(1)}</text><text x="${L-8}" y="${T+5}" text-anchor="end" fill="#527380" font-size="10">${maxy.toFixed(1)}</text><text x="${L-8}" y="${T+h}" text-anchor="end" fill="#527380" font-size="10">${miny.toFixed(1)}</text></svg>`;
+  return out;
+}
+function renderAnalytics(){
+  const p=patient(),config=effectiveConfig();
+  const metric=state.provider.type==="diabetes"?"lowEvents":"symptoms";
+  const metricName=state.provider.type==="migraine"?"headache days":state.provider.type==="asthma"?"asthma symptom days":"reported low-glucose event days";
+  const records=dailySeries(metric),weeks=weeklyBurden(records,metric),result=computeWeeklyForecast(weeks);
+  const patterns=patternCandidates();
+  const selectedPattern=patterns.find(x=>x.a+":"+x.b===state.analyticsPattern)||patterns[0];
+  return `
+    <button data-page="home" style="margin-bottom:20px">← Back to my home</button>
+    <div class="page-heading"><h1 id="page-title" tabindex="-1">${esc(p.name)}</h1><p class="muted">Age ${p.age} · ${esc(state.provider.focus)} · Fictional patient</p></div>
+    <div class="analytics-tabs" aria-label="Patient chart sections">
+      <button type="button" data-chart-section="overview" aria-pressed="false">Patient overview</button>
+      <button type="button" data-chart-section="analytics" aria-pressed="true">Trends &amp; Forecasts · Experimental</button>
+    </div>
+    <div class="analytics-warning"><strong>Research demonstration — not for clinical decision-making.</strong> These exploratory estimates and associations use fictional records. They do not predict medical events, diagnose conditions, or recommend treatment. No clinical validation has been performed.</div>
+    <section class="panel">
+      <div class="flex between"><div><h2>Weekly symptom burden</h2><p class="small muted">${esc(metricName)} · observed weekly history and a conservative next-week estimate</p></div>
+        <div><label for="analytics-period">History</label><select id="analytics-period">${[7,30,90].map(n=>`<option value="${n}" ${n===config.period?'selected':''}>${n} days</option>`).join('')}</select></div></div>
+      ${result.ok?`<div class="analytics-legend"><span><i class="legend-swatch"></i>Observed weekly burden</span><span><i class="legend-swatch forecast"></i>Exploratory estimate</span><span><i class="legend-swatch band"></i>Illustrative range</span></div>
+      <div class="analytics-chart">${weeklyForecastSVG(weeks,result)}</div>
+      <div class="analytics-summary"><div><strong>${result.latest.toFixed(1)} of 7 days</strong><span>Most recent complete week (scaled for missing reports)</span></div><div><strong>${result.direction}</strong><span>Recent historical direction</span></div><div><strong>${result.forecast.toFixed(1)} days</strong><span>Next-week exploratory estimate — not a clinical prediction</span></div></div>
+      <p class="small muted">${result.trustworthy?"The rolling-mean baseline had lower historical error than a last-week-only comparison.":"The exploratory model did not clearly outperform a last-week-only baseline; interpret the projection cautiously."} Missing days are excluded, not counted as symptom-free.</p>
+      <details><summary>Model details and limitations</summary><p class="small muted" style="margin-top:12px">${esc(result.method)} Backtest mean absolute error: ${result.mae.toFixed(2)} symptom days; last-week baseline: ${result.naive.toFixed(2)} days. ${result.used} sufficiently observed weeks. This small synthetic sample cannot establish forecast reliability.</p></details>`:
+      `<div class="empty"><strong>No reliable weekly projection available.</strong><p>${esc(result.reason)}</p><p>Missing reports are never treated as symptom-free days.</p></div>`}
+    </section>
+    <section class="panel"><h2>Historical pattern discovery</h2><p class="small muted">Explore sleep, stress, and symptom measurements from paired fictional daily reports. Correlations are descriptive only; they do not show causation, medication effectiveness, or medical risk.</p>
+      <div class="field"><label for="analytics-pattern">Explore a relationship</label><select id="analytics-pattern">${patterns.map(x=>`<option value="${x.a}:${x.b}" ${x===selectedPattern?'selected':''}>${esc(x.al)} × ${esc(x.bl)}</option>`).join('')}</select></div>
+      ${selectedPattern.r===null?`<div class="empty">Insufficient variation or fewer than 12 paired observations for a meaningful descriptive correlation. ${selectedPattern.n} paired days available.</div>`:
+      `<div class="analytics-grid"><div class="analytics-chart">${scatterSVG(selectedPattern)}</div><div class="analytics-insight"><h3>Observed relationship</h3><p><strong>Exploratory correlation (r) = ${selectedPattern.r.toFixed(2)}</strong> · ${selectedPattern.n} paired days</p><p>${selectedPattern.r>0?'These two measurements show a positive association in this fictional sample.':'These two measurements show a negative association in this fictional sample.'}</p><p>Daily observations can be repetitive, correlated over time, or influenced by other factors. This is an exploratory description, not a clinically validated finding.</p></div></div>`}
+      <details style="margin-top:15px"><summary>Method and data limitations</summary><p class="small muted" style="margin-top:12px">Pair observations from the same calendar date; exclude pairs missing either value. Require at least 12 paired dates and variation in both measurements. Calculate Pearson correlation. Device readings use the existing quality filters. No multiple-testing adjustment, causal identification, patient population generalization, or clinical validation is performed.</p></details>
+    </section>
+    <p class="small muted">All analyses run locally in your browser. Source records are synthetic. Change the history period to compare descriptive results; no external AI or prediction service is called.</p>`;
+}
+
+function renderCalendar(){
+  const weekly=state.calendarMode==="week";
+  const start=weekly?monday(state.calendarDate):state.calendarDate;
+  const dates=Array.from({length:weekly?7:1},(_,i)=>addDays(start,i));
+  const today=localDate(new Date());
+  const title=weekly
+    ?dateLabel(start,{month:"short",day:"numeric"})+" – "+
+      dateLabel(dates.at(-1),{month:"short",day:"numeric",year:"numeric"})
+    :dateLabel(start);
+
+  return`
+    <div class="page-heading">
+      <h1 id="page-title" tabindex="-1">My calendar</h1>
+      <p class="muted">
+        ${esc(state.provider.name)} · View-only fictional appointments
+      </p>
+    </div>
+
+    <div class="toolbar">
+      <button id="previous-date" aria-label="Previous ${state.calendarMode}">←</button>
+      <button id="today-date">Today</button>
+      <button id="next-date" aria-label="Next ${state.calendarMode}">→</button>
+      <label for="calendar-date">Date</label>
+      <input id="calendar-date" type="date" value="${state.calendarDate}">
+      <button data-calendar-mode="day" aria-pressed="${!weekly}">Day</button>
+      <button data-calendar-mode="week" aria-pressed="${weekly}">Week</button>
+    </div>
+
+    <h2>${esc(title)}</h2>
+    <div class="calendar-scroll">
+      ${weekly?`<div class="week">
+        ${dates.map(date=>`
+          <section class="day-column ${date===today?"today":""}" aria-label="${esc(dateLabel(date))}">
+            <h3 class="day-heading">${esc(dateLabel(date,{weekday:"short",day:"numeric"}))}</h3>
+            ${eventsOn(date).map(a=>eventHTML(a)).join("")||'<p class="small muted">No visits</p>'}
+          </section>`).join("")}
+      </div>`:`
+        <div class="day-view">
+          ${eventsOn(start).map(a=>eventHTML(a)).join("")||'<p class="empty">No appointments for this day.</p>'}
+        </div>`}
+    </div>
+
+    <p class="small muted" style="margin-top:16px">
+      Select an appointment to open its patient chart.
+      Appointments cannot be edited or deleted here.
+      Times use your device’s local timezone; this is not an EHR schedule.
+    </p>`;
+}
+
+function viewAppointment(id){
+  const appointment=state.appointments.find(a=>a.id===id);
+  if(!appointment)return;
+
+  modal("Appointment",`
+    <h2>${esc(patients[appointment.patient].name)}</h2>
+    <p>
+      ${esc(dateLabel(appointment.date))}<br>
+      ${esc(timeLabel(appointment.time))} · ${appointment.duration} minutes
+    </p>
+    <p class="muted">${esc(appointment.type)}</p>
+    <button id="appointment-open" class="primary">Go to patient chart</button>
+    <p class="small muted" style="margin-top:18px">
+      View-only fictional appointment.
+    </p>
+  `);
+  $("appointment-open").onclick=()=>openPatient(appointment.patient);
+}
+
+function configurationFields(config,prefix){
+  return`
+    <p class="small muted">Choose one to four cards and their default visual types.</p>
+    ${allowedMetrics[state.provider.type].map(id=>`
+      <div class="setting-row">
+        <label>
+          <input type="checkbox" data-config-metric="${id}"
+            ${config.metrics.includes(id)?"checked":""}>
+          ${esc(metricLabel(id))}
+        </label>
+        <select data-config-visual="${id}" aria-label="Visual type for ${esc(metricLabel(id))}">
+          ${visualOptions(config.visuals[id]||"number")}
+        </select>
+      </div>`).join("")}
+
+    <div class="field">
+      <label for="${prefix}-period">Review period</label>
+      <select id="${prefix}-period">
+        ${[7,30,90].map(n=>`<option value="${n}" ${n===config.period?"selected":""}>
+          Last ${n} days</option>`).join("")}
+      </select>
+    </div>
+
+    <label class="review-check">
+      <input id="${prefix}-trend" type="checkbox" ${config.showTrend?"checked":""}>
+      Show supporting trend
+    </label>
+
+    <p id="${prefix}-error" class="error" role="alert"></p>`;
+}
+
+function readConfiguration(form,prefix){
+  const selected=[...form.querySelectorAll("[data-config-metric]")]
+    .filter(input=>input.checked).map(input=>input.dataset.configMetric);
+
+  if(!selected.length||selected.length>4){
+    $(prefix+"-error").textContent="Choose between one and four cards.";
+    return null;
+  }
+
+  const visuals={};
+  form.querySelectorAll("[data-config-visual]").forEach(select=>{
+    visuals[select.dataset.configVisual]=select.value;
+  });
+
+  return{
+    metrics:selected,
+    period:Number($(prefix+"-period").value),
+    showTrend:$(prefix+"-trend").checked,
+    visuals
+  };
+}
+
+function editPatientDashboard(){
+  const name=patient().name;
+  modal("Edit Patient Dashboard",`
+    <p>
+      Customize <strong>${esc(name)}</strong>’s dashboard for
+      ${esc(state.provider.name)}. Other patients are unchanged.
+    </p>
+    <form id="patient-config-form">
+      ${configurationFields(effectiveConfig(),"patient-config")}
+      <div class="flex">
+        <button class="primary">Save patient dashboard</button>
+        <button type="button" id="reset-patient-dashboard">Use provider defaults</button>
+      </div>
+    </form>
+    <p class="small muted" style="margin-top:16px">
+      Saved patient settings take precedence over provider defaults.
+      Reset to inherit the latest provider-wide settings.
+    </p>
+  `);
+
+  $("patient-config-form").onsubmit=event=>{
+    event.preventDefault();
+    const config=readConfiguration(event.currentTarget,"patient-config");
+    if(!config)return;
+    state.overrides[state.patient]=config;
+    const saved=store(key("patient-overrides"),state.overrides);
+    $("modal").close();render();
+    notify(saved?"Patient dashboard saved.":"Updated this session; browser storage is unavailable.");
+  };
+
+  $("reset-patient-dashboard").onclick=()=>{
+    delete state.overrides[state.patient];
+    const saved=store(key("patient-overrides"),state.overrides);
+    $("modal").close();render();
+    notify(saved?"Patient dashboard now uses your provider defaults.":
+      "Defaults applied this session; browser storage is unavailable.");
+  };
+}
+
+function deviceContext(){
+  return window.isSecureContext&&
+    (location.protocol==="https:"||["localhost","127.0.0.1"].includes(location.hostname))&&
+    Boolean(window.PublicKeyCredential&&navigator.credentials);
+}
+
+function renderGlobal(){
+  const registered=read(deviceKey(state.provider.id));
+  return`
+    <button data-page="home" style="margin-bottom:20px">← Back to my home</button>
+    <div class="page-heading">
+      <h1 id="page-title" tabindex="-1">Global Settings</h1>
+      <p class="muted">Your provider-wide workspace defaults.</p>
+    </div>
+
+    <section class="panel settings-panel">
+      <h2>Dashboard defaults</h2>
+      <p class="small muted">
+        Applies to your three patients unless a patient has saved adjustments.
+        Patient changes take precedence and can be reset from their chart.
+      </p>
+      <form id="global-config-form">
+        ${configurationFields(state.defaults,"global-config")}
+        <button class="primary">Save provider defaults</button>
+      </form>
+    </section>
+
+    <section class="panel settings-panel">
+      <h2>Device unlock</h2>
+      <p class="small muted">
+        Your device may offer Touch ID, Face ID, Windows Hello, or a device PIN.
+      </p>
+      <div class="notice">
+        Browser device-verification demonstration only.
+        No server verifies the passkey assertion; this does not secure clinical records.
+        ${deviceContext()?"":"Open over HTTPS or localhost to use the browser prompt."}
+      </div>
+      <div class="flex" style="margin-top:16px">
+        <button id="register-device" ${deviceContext()?"":"disabled"}>
+          ${registered?"Replace registration":"Register this device"}
+        </button>
+        <button id="forget-device" ${registered?"":"disabled"}>Forget device</button>
+      </div>
+      <p id="device-status" class="success" role="status"></p>
+    </section>
+
+    <section class="panel settings-panel">
+      <h2>Record connection</h2>
+      <p class="small muted">
+        ${state.connection?"Mock account linked. No live EHR connection.":"No mock EHR account linked."}
+      </p>
+      <button id="manage-connection">Manage demo Epic / MyChart connection</button>
+    </section>`;
+}
+
+function connectionDialog(){
+  const connected=Boolean(state.connection);
+  modal("Demo Epic / MyChart connection",`
+    <div class="notice">
+      Simulation only—not Epic login, SMART on FHIR authorization,
+      or a live MyChart connection. Do not enter real credentials.
+    </div>
+    <table style="margin-top:18px">
+      <tr><th>Environment</th><td>SMART@Clinic Fictional Clinic</td></tr>
+      <tr><th>Provider</th><td>${esc(state.provider.name)}</td></tr>
+      <tr><th>Patients</th><td>${roster().map(p=>esc(p.name)).join(", ")}</td></tr>
+      <tr><th>Access</th><td>Simulated read-only context</td></tr>
+      <tr><th>MyChart</th><td>Simulated patient sharing; no patient login collected</td></tr>
+      <tr><th>Status</th><td>${connected?"Mock account linked":"Not linked"}</td></tr>
+    </table>
+    <p class="small muted" style="margin-top:16px">
+      Production integration requires an approved application, OAuth/SMART on FHIR,
+      patient matching, consent, and secure server-side token handling.
+    </p>
+    <button id="toggle-connection" class="primary">
+      ${connected?"Disconnect mock account":"Approve simulated connection"}
+    </button>
+    <p id="connection-error" class="error" role="alert"></p>
+  `);
+
+  $("toggle-connection").onclick=()=>{
+    const next=connected?null:{
+      simulated:true,provider:state.provider.id,linkedAt:new Date().toISOString()
+    };
+    const saved=connected?remove(key("connection")):store(key("connection"),next);
+    if(!saved){$("connection-error").textContent="Browser storage is unavailable.";return;}
+    state.connection=next;
+    $("modal").close();render();
+    notify(connected?"Mock account disconnected.":"Mock account linked. No external system was contacted.");
+  };
+}
+
+/* Speech-to-text: finalized transcripts become reviewable drafts. */
+function updateSpeechUI(message){
+  if($("speech-start"))$("speech-start").disabled=Boolean(recognition);
+  if($("speech-stop"))$("speech-stop").disabled=!recognition;
+  if($("speech-status")){
+    $("speech-status").textContent=message;
+    $("speech-status").classList.toggle("listening",Boolean(recognition));
+  }
+}
+
+function startDictation(){
+  const API=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!API){
+    updateSpeechUI("Speech recognition is unavailable in this browser. You can type instead.");
+    return;
+  }
+  if(recognition)return;
+
+  if(!confirm(
+    "Use fictional information only. Browser speech recognition may send audio " +
+    "to the browser vendor. Start microphone transcription?"
+  ))return;
+
+  const owner=state.provider.id;
+  const patientId=state.patient;
+  const r=new API();
+  recognition=r;
+  r.lang="en-US";
+  r.continuous=true;
+  r.interimResults=true;
+
+  const stillCurrent=()=>recognition===r&&
+    state.provider?.id===owner&&state.patient===patientId&&state.page==="chart";
+
+  r.onresult=event=>{
+    if(!stillCurrent())return;
+    let interim="";
+    let finalized=false;
+
+    for(let i=event.resultIndex;i<event.results.length;i++){
+      const text=event.results[i][0].transcript;
+      if(event.results[i].isFinal){
+        const existing=state.drafts[patientId]||"";
+        state.drafts[patientId]=(existing+(existing?" ":"")+text).slice(0,5000);
+        finalized=true;
+      }else interim+=text;
+    }
+
+    if(finalized){
+      state.reviewed[patientId]=false;
+      $("note-text").value=state.drafts[patientId];
+      $("review-note").checked=false;
+    }
+
+    updateSpeechUI(interim?"Listening… "+interim:"Listening…");
+  };
+
+  r.onerror=event=>{
+    if(recognition!==r)return;
+    recognition=null;
+    r.onresult=null;
+    try{r.abort();}catch{}
+    updateSpeechUI(
+      "Dictation stopped: "+event.error+
+      ". Check microphone permission or type instead. HTTPS may be required."
+    );
+  };
+
+  r.onend=()=>{
+    if(recognition!==r)return;
+    recognition=null;
+    updateSpeechUI("Dictation stopped. Review finalized text before saving.");
+  };
+
+  try{
+    r.start();
+    updateSpeechUI("Listening… use Stop dictation when finished.");
+  }catch(error){
+    recognition=null;
+    updateSpeechUI("Could not start dictation. Check microphone permissions or type instead.");
+  }
+}
+
+/* Device-unlock demonstration, not production authentication. */
+const encode=buffer=>btoa(String.fromCharCode(...new Uint8Array(buffer)));
+const decode=text=>Uint8Array.from(atob(text),c=>c.charCodeAt(0));
+const challenge=()=>crypto.getRandomValues(new Uint8Array(32));
+
+function setDeviceBusy(busy){
+  state.deviceBusy=busy;
+  $("logout").disabled=busy;
+  $("password-login").disabled=busy;
+  $("device-login").disabled=busy;
+  document.querySelectorAll("[data-page]").forEach(b=>b.disabled=busy);
+  if($("register-device"))$("register-device").disabled=busy||!deviceContext();
+}
+function deviceMessage(message){
+  if($("device-status"))$("device-status").textContent=message;
+}
+
+async function registerDevice(){
+  if(state.deviceBusy||!deviceContext())return;
+  const provider=state.provider;
+  setDeviceBusy(true);
+  try{
+    const available=await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if(!available)throw new Error("No supported device authenticator is available.");
+
+    const credential=await navigator.credentials.create({
+      publicKey:{
+        challenge:challenge(),
+        rp:{name:"SMART@Clinic fictional demo"},
+        user:{
+          id:new TextEncoder().encode("smartclinic-demo-"+provider.id),
+          name:provider.name,displayName:provider.name
+        },
+        pubKeyCredParams:[{type:"public-key",alg:-7},{type:"public-key",alg:-257}],
+        authenticatorSelection:{
+          authenticatorAttachment:"platform",
+          residentKey:"preferred",userVerification:"required"
+        },
+        timeout:60000,attestation:"none"
+      }
+    });
+
+    if(!credential)throw new Error("Registration canceled.");
+    const saved=store(deviceKey(provider.id),{
+      id:encode(credential.rawId),createdAt:new Date().toISOString()
+    });
+    deviceMessage(saved
+      ?"Device registered for this demo. Sign out to try device unlock."
+      :"Credential created, but browser storage was unavailable.");
+    if(saved&&$("forget-device"))$("forget-device").disabled=false;
+  }catch(error){
+    deviceMessage(error.name==="NotAllowedError"
+      ?"Registration canceled or not permitted. You can use the demo password."
+      :error.message);
+  }finally{setDeviceBusy(false);}
+}
+
+async function deviceLogin(){
+  if(state.deviceBusy)return;
+  if(!deviceContext()){
+    $("login-error").textContent=
+      "Device unlock requires HTTPS or localhost. Use the demo password for a local HTML file.";
+    return;
+  }
+  const provider=findProvider($("username").value);
+  if(!provider){$("login-error").textContent="Enter your demo first and last name.";return;}
+  const saved=read(deviceKey(provider.id));
+  if(!saved?.id){
+    $("login-error").textContent=
+      "Sign in with your demo password first, then register this device in Global Settings.";
+    return;
+  }
+
+  setDeviceBusy(true);
+  try{
+    const credential=await navigator.credentials.get({
+      publicKey:{
+        challenge:challenge(),
+        allowCredentials:[{type:"public-key",id:decode(saved.id)}],
+        userVerification:"required",timeout:60000
+      }
+    });
+    if(!credential||encode(credential.rawId)!==saved.id){
+      throw new Error("The credential did not match this demo account.");
+    }
+
+    /*
+    DEMO ONLY:
+    No server-side assertion-signature verification is implemented.
+    Never authorize real clinical access with this client-only mechanism.
+    */
+    signIn(provider);
+  }catch(error){
+    $("login-error").textContent=error.name==="NotAllowedError"
+      ?"Device unlock canceled or unavailable. Use the demo password."
+      :error.message;
+  }finally{setDeviceBusy(false);}
+}
+
+function showMetric(id){
+  if(!allowedMetrics[state.provider.type].includes(id))return;
+  const m=metricValue(id),days=selectedDays();
+
+  modal(m.label,`
+    <p style="font-size:27px"><strong>${esc(m.value)}</strong></p>
+    <p>${esc(m.detail)}</p>
+    <table>
+      <tr><th>Source</th><td>${esc(m.source)}</td></tr>
+      <tr><th>Unit</th><td>${esc(m.unit)}</td></tr>
+      <tr><th>Period</th><td>${days[0].date}–${days.at(-1).date}, UTC</td></tr>
+      <tr><th>Relevant observations/reports</th><td>${m.count}</td></tr>
+    </table>
+    <p class="small muted" style="margin-top:16px">
+      All values are synthetic. Changing the visual does not change source records.
+    </p>
+    <button id="inspect-sources">View source records</button>
+  `);
+
+  $("inspect-sources").onclick=()=>{
+    $("modal").close();
+    $("source-details").open=true;
+    $("source-details").scrollIntoView({behavior:"auto"});
+  };
+}
+
+function downloadBlob(content,type,filename){
+  const url=URL.createObjectURL(new Blob([content],{type}));
+  const a=document.createElement("a");
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function exportCSV(){
+  const rows=[
+    ["date_utc","patient_id","questionnaire_reported","symptoms_reported",
+     "severity","activity_limited","rescue_uses","acute_medication_reported",
+     "low_glucose_events_reported","scheduled_doses","marked_taken",
+     "marked_not_taken","no_dose_report","device_readings","origin"],
+    ...selectedDays().map(day=>[
+      day.date,state.patient,Boolean(day.response),
+      day.response?.symptoms??"unknown",
+      day.response?.severity??"",
+      day.response?.activityLimited??"unknown",
+      day.response?.rescueUses??"",
+      day.response?.acuteMedication??"",
+      day.response?.lowGlucoseEvents??"",
+      day.doses.length,
+      day.doses.filter(d=>d.status==="taken").length,
+      day.doses.filter(d=>d.status==="not_taken").length,
+      day.doses.filter(d=>d.status==="no_report").length,
+      day.devices.map(r=>r.type+":"+r.value+" "+r.unit+" ["+r.quality+"]").join("; "),
+      "locally_generated_fictional_demo"
+    ])
+  ];
+  const csv=rows.map(row=>row.map(value=>
+    '"'+String(value).replace(/"/g,'""')+'"'
+  ).join(",")).join("\r\n");
+
+  downloadBlob(csv,"text/csv;charset=utf-8","SMART-Clinic-fictional-"+state.patient+".csv");
+  notify("Synthetic daily records exported. Notes are not included.");
+}
+
+function render(){
+  if(!state.provider)return;
+  stopDictation(true);
+
+  $("status").textContent="";
+  $("global-tab").hidden=!(state.page==="home"&&!state.patient);
+  $("chart-tab").hidden=!state.patient;
+
+  document.querySelectorAll("nav [data-page]").forEach(button=>{
+    if(button.dataset.page===state.page)button.setAttribute("aria-current","page");
+    else button.removeAttribute("aria-current");
+  });
+
+  $("page").innerHTML=state.page==="home"?renderHome():
+    state.page==="calendar"?renderCalendar():
+    state.page==="global"?renderGlobal():renderChart();
+
+  if(state.page==="home"){
+    $("home-patient").onchange=e=>$("open-patient").disabled=!e.target.value;
+    $("open-patient").onclick=()=>openPatient($("home-patient").value);
+  }
+
+  if(state.page==="chart"){
+    document.querySelectorAll("[data-chart-section]").forEach(b=>b.onclick=()=>{
+      state.analyticsView=b.dataset.chartSection==="analytics";render();
+    });
+    if(state.analyticsView){
+      $("analytics-pattern").onchange=e=>{state.analyticsPattern=e.target.value;render();};
+      $("analytics-period").onchange=e=>{
+        savePatientPatch({period:Number(e.target.value)});render();
+      };
+      $("page-title")?.focus();return;
+    }
+    $("chart-patient").onchange=e=>openPatient(e.target.value);
+    $("edit-patient-dashboard").onclick=editPatientDashboard;
+
+    $("review-period").onchange=e=>{
+      const saved=savePatientPatch({period:Number(e.target.value)});
+      render();
+      notify(saved?"Review period saved for this patient.":
+        "Updated this session; browser storage is unavailable.");
+    };
+
+    document.querySelectorAll("[data-visual]").forEach(select=>{
+      select.onchange=()=>{
+        const id=select.dataset.visual;
+        const saved=savePatientPatch({visuals:{[id]:select.value}});
+        render();
+        $("visual-"+id)?.focus();
+        notify(saved?"Visual saved for this patient.":
+          "Visual updated this session; browser storage is unavailable.");
+      };
+    });
+
+    $("note-text").oninput=e=>{
+      state.drafts[state.patient]=e.target.value;
+      state.reviewed[state.patient]=false;
+      $("review-note").checked=false;
+    };
+    $("review-note").onchange=e=>state.reviewed[state.patient]=e.target.checked;
+    $("speech-start").onclick=startDictation;
+    $("speech-stop").onclick=()=>stopDictation(false);
+
+    $("save-note").onclick=()=>{
+      if(recognition){
+        notify("Stop dictation and review the complete draft before saving.");return;
+      }
+      const text=$("note-text").value.trim();
+      if(!text){notify("Write or dictate a fictional note first.");return;}
+      if(!state.reviewed[state.patient]){
+        notify("Review the note and check the accuracy confirmation before saving.");return;
+      }
+      state.notes.push({
+        patient:state.patient,author:state.provider.name,
+        time:new Date().toISOString(),text
+      });
+      state.drafts[state.patient]="";
+      state.reviewed[state.patient]=false;
+      $("note-text").value="";
+      $("review-note").checked=false;
+      $("notes").innerHTML=notesHTML();
+      notify("Reviewed note saved for this session. Original reports are unchanged.");
+    };
+    $("export-csv").onclick=exportCSV;
+  }
+
+  if(state.page==="calendar"){
+    $("previous-date").onclick=()=>{
+      state.calendarDate=addDays(state.calendarDate,state.calendarMode==="week"?-7:-1);render();
+    };
+    $("next-date").onclick=()=>{
+      state.calendarDate=addDays(state.calendarDate,state.calendarMode==="week"?7:1);render();
+    };
+    $("today-date").onclick=()=>{
+      state.calendarDate=localDate(new Date());render();
+    };
+    $("calendar-date").onchange=e=>{
+      const value=e.target.value;
+      if(/^\d{4}-\d{2}-\d{2}$/.test(value)&&
+         Number.isFinite(parseDate(value).getTime())){
+        state.calendarDate=value;render();
+      }
+    };
+  }
+
+  if(state.page==="global"){
+    $("global-config-form").onsubmit=e=>{
+      e.preventDefault();
+      const config=readConfiguration(e.currentTarget,"global-config");
+      if(!config)return;
+      state.defaults=config;
+      const saved=store(key("defaults"),config);
+      $("global-config-error").textContent="";
+      notify(saved?"Provider defaults saved. Patient-specific adjustments are retained.":
+        "Updated this session; browser storage is unavailable.");
+    };
+
+    $("register-device").onclick=registerDevice;
+    $("forget-device").onclick=()=>{
+      if(state.deviceBusy)return;
+      const removed=remove(deviceKey(state.provider.id));
+      if(removed){
+        render();
+        deviceMessage(
+          "Demo registration forgotten. A passkey may remain in your device’s password manager."
+        );
+      }else deviceMessage("Browser storage could not be updated.");
+    };
+    $("manage-connection").onclick=connectionDialog;
+  }
+
+  $("page-title")?.focus();
+}
+
+$("username").value=read("smartclinic-last-name","");
+
+$("login-form").onsubmit=e=>{
+  e.preventDefault();
+  if(state.deviceBusy)return;
+  const provider=findProvider($("username").value);
+  if(!provider||provider.password!==$("password").value){
+    $("login-error").textContent="Check the demo username and password.";return;
+  }
+  signIn(provider);
+};
+
+$("device-login").onclick=deviceLogin;
+$("logout").onclick=signOut;
+$("close-modal").onclick=()=>$("modal").close();
+
+$("download-html").onclick=()=>{
+  downloadBlob(originalHTML,"text/html;charset=utf-8","SMART-Clinic.html");
+};
+
+document.addEventListener("click",event=>{
+  if(!state.provider||state.deviceBusy)return;
+
+  const page=event.target.closest("[data-page]");
+  if(page){navigate(page.dataset.page);return;}
+
+  const mode=event.target.closest("[data-calendar-mode]");
+  if(mode){
+    state.calendarMode=mode.dataset.calendarMode;render();return;
+  }
+
+  const appointment=event.target.closest("[data-event]");
+  if(appointment){viewAppointment(appointment.dataset.event);return;}
+
+  const metric=event.target.closest("[data-metric]");
+  if(metric){showMetric(metric.dataset.metric);return;}
+
+  const dayButton=event.target.closest("[data-day]");
+  if(dayButton&&state.patient){
+    const day=selectedDays().find(d=>d.date===dayButton.dataset.day);
+    if(day)modal("Original demo records · "+day.date,`
+      <p class="small muted">UTC timestamps. Source identifiers and quality flags retained.</p>
+      <pre>${esc(JSON.stringify(day,null,2))}</pre>
+    `);
+  }
+});
+
+window.addEventListener("pagehide",()=>stopDictation(true));
+
+})();
+</script>
+</body>
+</html>
