@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CareView — SMART@Home Clinician Prototype</title>
+<style>
+:root{
+  --ink:#20372f;--muted:#61746a;--line:#dce5df;--paper:#f3f7f4;
+  --green:#16764f;--nav:#183c32;--blue:#245d9c;--amber:#925b0b;
+  --purple:#7250a0;--white:#fff
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible{outline:3px solid #348fd3;outline-offset:3px}
+button,select,input,textarea{border:1px solid #cbd8ce;border-radius:8px}
+button{background:white;color:var(--ink);padding:9px 13px;font-weight:650}
+button:hover{background:#edf4ee}
+.primary{background:var(--nav);color:white;border-color:var(--nav)}
+.primary:hover{background:#285847}
+input,select,textarea{padding:9px;background:white;color:var(--ink)}
+textarea{width:100%;min-height:115px;resize:vertical}
+label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:25px;margin-bottom:6px;letter-spacing:-.6px}
+h2{font-size:18px}h3{font-size:15px}
+small,.small{font-size:12px}.muted{color:var(--muted)}
+.app{max-width:1250px;margin:auto}
+header{background:var(--nav);color:white;padding:20px 25px}
+.brandline,.flex{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brandline{justify-content:space-between}
+.logo{font-size:23px;font-weight:850}.logo em{font-style:normal;color:#9cddb0}
+header .muted{color:#c8dacf}
+header select{max-width:210px}
+main{padding:24px}
+.notice{padding:12px 15px;background:#fff7e7;border:1px solid #e7d4ad;
+  border-radius:10px;font-size:12px;line-height:1.6;margin-bottom:18px}
+.toolbar{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin:16px 0}
+.toolbar .grow{flex:1}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0}
+.tabs button[aria-current=page]{background:var(--nav);color:white}
+.panel{background:white;border:1px solid var(--line);border-radius:13px;
+  padding:19px;margin-bottom:17px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;
+  gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.sectionhead h2,.sectionhead h3{margin:0}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.card{text-align:left;padding:17px;border-radius:13px;border:1px solid var(--line);
+  background:white;min-height:175px;display:flex;flex-direction:column;gap:8px}
+.card:hover{border-color:var(--green);background:#f9fcf9}
+.card .value{font-size:29px;font-weight:800;letter-spacing:-.7px}
+.card .title{font-size:13px;font-weight:750}
+.card .description{font-size:12px;color:var(--muted);font-weight:400;line-height:1.5}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 8px;
+  border-radius:15px;line-height:1.3}
+.device{background:#e8f1fc;color:var(--blue)}
+.patient{background:#edf5e9;color:#416d2c}
+.clinician{background:#f1eafb;color:var(--purple)}
+.neutral{background:#eef2ef;color:#50645a}
+.review{background:#fff1d7;color:var(--amber)}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.summary{border-left:4px solid var(--green)}
+.summary li{margin:9px 0;line-height:1.6}
+.linkbtn{border:0;padding:2px 4px;color:var(--blue);text-decoration:underline;
+  background:transparent;font-size:12px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:17px}
+.chart{width:100%;height:auto;display:block}
+.chartwrap{overflow-x:auto}
+.chartwrap svg{min-width:480px}
+.chart-note{font-size:12px;color:var(--muted);line-height:1.6}
+.empty{padding:20px;text-align:center;color:var(--muted);background:#f5f8f5;border-radius:9px}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.day{min-height:47px;padding:5px;font-size:11px;border-radius:6px}
+.day.yes{background:#ffe4be;border-color:#efc68e;color:#704713}
+.day.no{background:#e7f1e3;border-color:#bad0b1}
+.day.missing{background:repeating-linear-gradient(135deg,#f5f6f5,#f5f6f5 4px,#e9edea 4px,#e9edea 8px);color:#61746a}
+.flag{padding:12px 0;border-bottom:1px solid var(--line)}
+.flag:last-child{border-bottom:0}
+.flag p{font-size:12px;line-height:1.6;margin:6px 0}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line);
+  vertical-align:top;white-space:normal}
+th{background:#f3f7f3}
+.tablewrap{overflow:auto}
+.settingrow{display:flex;gap:12px;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid var(--line)}
+.settingrow label{margin:0;font-size:14px;display:flex;align-items:center;gap:9px}
+.settingrow input{width:18px;height:18px;accent-color:var(--green)}
+.field{margin:15px 0}
+.help{font-size:12px;color:var(--muted);line-height:1.6}
+.status{font-size:12px;min-height:18px;margin:8px 0;color:var(--green)}
+footer{padding:0 24px 25px;font-size:11px;color:var(--muted);line-height:1.7}
+dialog{border:1px solid var(--line);border-radius:15px;padding:0;
+  width:min(850px,95vw);max-height:85vh;color:var(--ink)}
+dialog::backdrop{background:#10271db3}
+.dialoghead{position:sticky;top:0;background:white;padding:18px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dialoghead h2{margin:0}
+.dialogbody{padding:20px}
+.record{padding:12px;border:1px solid var(--line);border-radius:9px;margin:10px 0;line-height:1.6}
+pre{white-space:pre-wrap;word-break:break-word;font-size:11px;background:#f3f7f3;padding:12px}
+.patientmode .clinician-only{display:none!important}
+.patientmode .card .value{font-size:33px}
+.patientmode .chart-note,.patientmode .summary li{font-size:14px}
+@media(max-width:950px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}
+@media(max-width:550px){
+  main{padding:14px}header{padding:16px}.card{padding:13px}
+  .toolbar>*{flex:1 1 42%}.cards{gap:8px}.card .value{font-size:25px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header>
+  <div class="brandline">
+    <div>
+      <div class="logo">Care<em>View</em></div>
+      <div class="small muted">SMART@Home clinician-view concept · Theta Bytes 2.0</div>
+    </div>
+    <div class="clinician-only">
+      <label for="provider">Demo provider profile — not authentication</label>
+      <select id="provider">
+        <option value="pulmonary">Pulmonary clinician</option>
+        <option value="primary">Primary care clinician</option>
+        <option value="neurology">Neurology clinician</option>
+      </select>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="notice clinician-only">
+    <strong>Prototype / fictional records.</strong>
+    Repository integration is pending the exact Synthia GitHub URL and data schema.
+    These records are generated locally for demonstration, not loaded from that repository.
+    Review indicators are descriptive, not validated clinical alerts.
+  </div>
+
+  <div class="sectionhead">
+    <div>
+      <h1 id="patient-heading"></h1>
+      <div id="patient-subtitle" class="muted small"></div>
+    </div>
+    <button id="patient-mode">Discuss with patient</button>
+  </div>
+
+  <div class="toolbar">
+    <div>
+      <label for="patient-select">Demo patient / tracker</label>
+      <select id="patient-select">
+        <option value="asthma">Jordan Davis · Asthma</option>
+        <option value="migraine">Alex Morgan · Migraine</option>
+      </select>
+    </div>
+    <div>
+      <label for="range">Review period</label>
+      <select id="range">
+        <option value="7">Last 7 days</option>
+        <option value="30" selected>Last 30 days</option>
+        <option value="90">Last 90 days</option>
+      </select>
+    </div>
+    <div class="grow">
+      <div id="period-label" class="small muted"></div>
+      <div id="view-label" class="small"></div>
+    </div>
+    <button class="clinician-only" data-nav="settings">Customize view</button>
+    <button class="clinician-only" id="export">Export daily CSV</button>
+  </div>
+
+  <nav class="tabs clinician-only" aria-label="Dashboard sections">
+    <button data-nav="overview">Overview</button>
+    <button data-nav="data">All data & provenance</button>
+    <button data-nav="notes">Reports & annotations</button>
+    <button data-nav="settings">View preferences</button>
+  </nav>
+  <div id="content"></div>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+</main>
+<footer>
+  Fictional data only. Device measurements and patient experiences are complementary;
+  neither should be silently substituted for the other. Medication entries describe reports,
+  not verified ingestion. No diagnoses, predicted attacks, or treatment changes are generated.
+  This prototype is not connected to Epic, MyChart, or a clinical record.
+</footer>
+</div>
+
+<dialog id="detail">
+  <div class="dialoghead">
+    <h2 id="detail-title"></h2>
+    <button id="close-detail" aria-label="Close details">Close</button>
+  </div>
+  <div class="dialogbody" id="detail-body"></div>
+</dialog>
+
+<script>
+(() => {
+'use strict';
+
+/*
+DATA BOUNDARY
+------------
+Replace buildPatient() output with an adapter for the supplied repository.
+The repository URL/schema has not been supplied, so no repo compatibility is claimed.
+
+Internal model:
+patient {
+  id, name, tracker, age, condition, medication,
+  days: [{
+    date,
+    responses: [{
+      id, timestamp, source:"patient",
+      symptoms:boolean, severity:number,
+      schoolMissed:boolean, activityLimited:boolean,
+      rescueUses:number|null
+    }],
+    doses:[{
+      id, scheduledAt, medicationId,
+      status:"taken"|"not_taken"|"no_report",
+      reportedAt:string|null, source:"patient"
+    }],
+    devices:[{
+      id,timestamp,type:"fev1"|"bp",
+      value:number|{systolic,diastolic},unit,
+      quality:"accepted"|"rejected"|"conflicting"|"unknown",
+      qualityNote,source:"device"
+    }],
+    actionPlanZone:null|{zone,timestamp,source}
+  }]
+}
+
+Real adapters must resolve tracker question definitions and medication IDs,
+preserve source records, reconcile scheduled doses, and retain quality metadata.
+A missing dose report cannot be inferred as "not taken".
+*/
+
+// Demo reference date is fixed, not silently represented as today's live data.
+const END = '2026-11-06';
+const DAY = 86400000;
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? '').replace(/[&<>"']/g,c=>({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+const iso = n => new Date(Date.parse(END+'T12:00:00Z') + n*DAY).toISOString().slice(0,10);
+const short = date => new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{
+  month:'short',day:'numeric',timeZone:'UTC'
+});
+const pct = (n,d) => d ? Math.round(n/d*100)+'%' : 'Unavailable';
+const stamp = date => date+'T18:00:00Z';
+const now = () => new Date().toISOString();
+
+function buildPatient(id) {
+  const asthma = id==='asthma';
+  const p = {
+    id,
+    name: asthma?'Jordan Davis':'Alex Morgan',
+    age: asthma?16:17,
+    tracker: asthma?'Asthma':'Migraine',
+    condition: asthma?'asthma':'migraine',
+    medication:{
+      id:id+'-scheduled-med',
+      name:asthma?'Demo scheduled controller':'Demo scheduled preventive medication'
+    },
+    days:[]
+  };
+  for(let i=0;i<90;i++){
+    const date=iso(i-89);
+    const missing=asthma ? (i%9===0 || [84,87].includes(i)) : i%13===0;
+    const symptomatic=asthma ? (i>=76 ? i%4!==0 : i%4===0) : i%7===2;
+    const responses=[];
+    if(!missing){
+      responses.push({
+        id:id+'-response-'+i, timestamp:date+'T08:30:00Z',source:'patient',
+        symptoms:symptomatic,severity:symptomatic?(asthma?5:4):0,
+        schoolMissed:symptomatic&&i%5===0,
+        activityLimited:symptomatic&&i%2===0,
+        rescueUses:asthma?(symptomatic?1+(i%2):0):null
+      });
+      if(i%17===0){
+        responses.push({
+          id:id+'-response-'+i+'-later',timestamp:date+'T19:30:00Z',
+          source:'patient',symptoms:false,severity:0,
+          schoolMissed:false,activityLimited:false,rescueUses:asthma?0:null
+        });
+      }
+    }
+    const doseCount=asthma?2:1;
+    const doses=Array.from({length:doseCount},(_,j)=>{
+      const missingDose=missing||(asthma&&i>75&&(i+j)%4===0);
+      const status=missingDose?'no_report':((i+j)%19===0?'not_taken':'taken');
+      return {
+        id:id+'-dose-'+i+'-'+j, medicationId:p.medication.id,
+        scheduledAt:date+(j?'T20:00:00Z':'T08:00:00Z'),
+        status,reportedAt:status==='no_report'?null:date+(j?'T20:05:00Z':'T08:05:00Z'),
+        source:'patient'
+      };
+    });
+    const devices=[];
+    if(asthma&&i%3===0){
+      const quality=i%21===0?'conflicting':i%15===0?'rejected':'accepted';
+      devices.push({
+        id:id+'-fev1-'+i,timestamp:date+'T08:15:00Z',
+        source:'device',type:'fev1',unit:'L',
+        value:Number((2.72-i*.002-(i>69?(i-69)*.013:0)+(i%5)*.015).toFixed(2)),
+        quality,
+        qualityNote:quality==='accepted'?'Demo quality metadata agrees.':
+          quality==='conflicting'?'Accepted flag and quality report disagree.':
+          'Demo quality check rejected this maneuver.'
+      });
+    }
+    // Illustrates another measured data type; no "normal" classification inferred.
+    if(i===70||i===84){
+      devices.push({
+        id:id+'-bp-'+i,timestamp:date+'T09:00:00Z',source:'device',
+        type:'bp',unit:'mmHg',value:{systolic:asthma?118:112,diastolic:asthma?76:72},
+        quality:'unknown',qualityNote:'Measurement quality metadata not supplied in demo.'
+      });
+    }
+    p.days.push({date,responses,doses,devices,actionPlanZone:null});
+  }
+  return p;
+}
+
+const patients={asthma:buildPatient('asthma'),migraine:buildPatient('migraine')};
+let saved={defaults:{},overrides:{}};
+try{
+  const parsed=JSON.parse(localStorage.getItem('careview-view-prefs-v2')||'null');
+  if(parsed?.defaults && parsed?.overrides) saved=parsed;
+}catch{}
+
+const state={
+  provider:'pulmonary',patient:'asthma',range:30,page:'overview',
+  patientMode:false,scope:'patient'
+};
+const reports=[]; // In memory only. No clinical text written to localStorage.
+let recognition=null;
+let draft={text:'',kind:'patient',confirmed:false};
+const metricIds=['symptoms','medication','fev1','function','coverage','bp'];
+const defaultOrders={
+  pulmonary:['symptoms','medication','fev1','function'],
+  primary:['symptoms','function','medication','coverage'],
+  neurology:['symptoms','function','medication','coverage']
+};
+const currentPatient=()=>patients[state.patient];
+const days=()=>currentPatient().days.slice(-state.range);
+const prefKey=()=>state.provider+':'+state.patient;
+
+function prefs(){
+  const base=saved.overrides[prefKey()]||saved.defaults[state.provider]||{
+    metrics:[...defaultOrders[state.provider]],chart:'calendar'
+  };
+  return {
+    metrics:Array.isArray(base.metrics)?base.metrics.filter(x=>metricIds.includes(x)):['symptoms'],
+    chart:base.chart==='bar'?'bar':'calendar'
+  };
+}
+function storePrefs(){
+  try{
+    localStorage.setItem('careview-view-prefs-v2',JSON.stringify(saved));
+    return true;
+  }catch{return false;}
+}
+function announce(text){$('status').textContent=text;}
+function sourceBadge(source){
+  const map={
+    device:['device','Device-measured'],
+    patient:['patient','Patient-reported'],
+    clinician:['clinician','Clinician-entered']
+  };
+  const [cls,label]=map[source]||['neutral','Derived from source records'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function daily(d){
+  return {
+    ...d,
+    reported:d.responses.length>0,
+    symptom:d.responses.length?d.responses.some(r=>r.symptoms):null,
+    severity:d.responses.length?Math.max(...d.responses.map(r=>r.severity)):null,
+    school:d.responses.length?d.responses.some(r=>r.schoolMissed):null,
+    activity:d.responses.length?d.responses.some(r=>r.activityLimited):null
+  };
+}
+
+function aggregate(ds=days()){
+  const grouped=ds.map(daily);
+  const responseDays=grouped.filter(d=>d.reported);
+  const doses=ds.flatMap(d=>d.doses);
+  const device=ds.flatMap(d=>d.devices).sort((a,b)=>a.timestamp.localeCompare(b.timestamp));
+  const fev=device.filter(d=>d.type==='fev1'&&d.quality==='accepted');
+  const allFev=device.filter(d=>d.type==='fev1');
+  const bp=device.filter(d=>d.type==='bp').at(-1);
+  return {
+    grouped,reported:responseDays.length,total:ds.length,
+    symptoms:responseDays.filter(d=>d.symptom).length,
+    school:responseDays.filter(d=>d.school).length,
+    activity:responseDays.filter(d=>d.activity).length,
+    taken:doses.filter(d=>d.status==='taken').length,
+    notTaken:doses.filter(d=>d.status==='not_taken').length,
+    unreported:doses.filter(d=>d.status==='no_report').length,
+    doses:doses.length,fev,allFev,bp,
+    anyData:ds.filter(d=>d.responses.length||d.devices.length||
+      d.doses.some(x=>x.status!=='no_report')).length
+  };
+}
+
+function metricInfo(id,a=aggregate()){
+  const headache=state.patient==='migraine';
+  switch(id){
+    case 'symptoms':return {
+      title:headache?'Headache days':'Symptom days',
+      value:`${a.symptoms} / ${a.reported}`,
+      desc:`${pct(a.symptoms,a.reported)} of days with symptom answers. ${a.total-a.reported} days without answers.`,
+      source:'patient'
+    };
+    case 'medication':return {
+      title:'Scheduled doses marked taken',
+      value:pct(a.taken,a.doses),
+      desc:`${a.taken}/${a.doses} scheduled doses; ${a.notTaken} marked not taken; ${a.unreported} unreported.`,
+      source:'patient'
+    };
+    case 'fev1':{
+      const last=a.fev.at(-1);
+      return {title:'Latest accepted FEV1',
+        value:last?last.value.toFixed(2)+' L':'No reading',
+        desc:last?`${short(last.timestamp.slice(0,10))}. ${a.allFev.length-a.fev.length} non-accepted or conflicting readings excluded from trend.`:
+          'No quality-accepted FEV1 in this period. Not applicable to every tracker.',
+        source:'device'};
+    }
+    case 'function':return {
+      title:'School & activity impact',
+      value:a.reported?`${a.school} school days`:'No reports',
+      desc:`${a.activity} days with activity limitations among ${a.reported} reporting days. School attendance schedule is not available.`,
+      source:'patient'
+    };
+    case 'coverage':return {
+      title:'Symptom reporting coverage',value:`${a.reported} / ${a.total}`,
+      desc:`${pct(a.reported,a.total)} of calendar days. Any-source records on ${a.anyData}/${a.total} days. Missing reports do not establish why.`,
+      source:'derived'
+    };
+    case 'bp':return {
+      title:'Latest measured blood pressure',
+      value:a.bp?`${a.bp.value.systolic}/${a.bp.value.diastolic}`:'No reading',
+      desc:a.bp?`mmHg · ${short(a.bp.timestamp.slice(0,10))}. Quality metadata unavailable; no range classification inferred.`:
+        'No device-measured blood pressure in the selected period.',
+      source:'device'
+    };
+  }
+}
+
+function summaryFindings(a){
+  const findings=[
+    {text:`${state.patient==='asthma'?'Symptoms':'Headaches'} were reported on ${a.symptoms} of ${a.reported} days with answers. ${a.total-a.reported} days have no symptom answers.`,metric:'symptoms'},
+    {text:`${a.taken} of ${a.doses} scheduled doses were marked taken (${pct(a.taken,a.doses)}). ${a.notTaken} were marked not taken and ${a.unreported} have no report.`,metric:'medication'}
+  ];
+  if(a.fev.length>=2){
+    const first=a.fev[0],last=a.fev.at(-1),change=last.value-first.value;
+    findings.push({
+      text:`First-to-last accepted FEV1 changed from ${first.value.toFixed(2)} L (${short(first.timestamp.slice(0,10))}) to ${last.value.toFixed(2)} L (${short(last.timestamp.slice(0,10))}), ${change>=0?'+':''}${change.toFixed(2)} L. This endpoint comparison does not establish clinical significance or cause.`,
+      metric:'fev1'
+    });
+  }
+  findings.push({
+    text:`Reports include ${a.school} days of missed school and ${a.activity} days of activity limitations. Discuss how symptoms affect daily life.`,
+    metric:'function'
+  });
+  return findings;
+}
+
+function latestSources(){
+  const p=currentPatient();
+  const timestamps={
+    patient:p.days.flatMap(d=>d.responses.map(r=>r.timestamp)),
+    medication:p.days.flatMap(d=>d.doses.filter(x=>x.reportedAt).map(x=>x.reportedAt)),
+    device:p.days.flatMap(d=>d.devices.map(x=>x.timestamp))
+  };
+  return Object.entries(timestamps).map(([key,values])=>{
+    const last=values.sort().at(-1);
+    return `${key==='patient'?'Questionnaire':key==='medication'?'Medication report':'Device'}: ${last?short(last.slice(0,10)):'none'}`;
+  }).join(' · ');
+}
+
+function chartSVG(records,{key,max,label,color='#16764f',type='line'}){
+  const W=700,H=220,L=45,R=18,T=20,B=40;
+  const usableW=W-L-R,usableH=H-T-B;
+  const start=Date.parse(days()[0].date+'T12:00:00Z');
+  const end=Date.parse(days().at(-1).date+'T12:00:00Z');
+  const x=date=>L+(Date.parse(date+'T12:00:00Z')-start)/Math.max(DAY,end-start)*usableW;
+  const y=v=>T+usableH-v/max*usableH;
+  let svg=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
+  for(let i=0;i<=4;i++){
+    const v=max*i/4,py=y(v);
+    svg+=`<line x1="${L}" x2="${W-R}" y1="${py}" y2="${py}" stroke="#e1e9e2"/>
+      <text x="${L-8}" y="${py+4}" text-anchor="end" font-size="11" fill="#61746a">${Number(v.toFixed(2))}</text>`;
+  }
+  if(type==='line'){
+    // Do not connect across days without a measured value.
+    let segment=[];
+    const flush=()=>{
+      if(segment.length>1) svg+=`<polyline points="${segment.join(' ')}" fill="none" stroke="${color}" stroke-width="2.5"/>`;
+      segment=[];
+    };
+    records.forEach(r=>{
+      if(r[key]===null||r[key]===undefined){flush();return;}
+      segment.push(`${x(r.date)},${y(r[key])}`);
+    });
+    flush();
+  }
+  records.forEach(r=>{
+    const v=r[key];
+    if(v===null||v===undefined)return;
+    const title=`${r.date}: ${v}. Activate to inspect source records.`;
+    if(type==='bar'){
+      const width=Math.max(3,Math.min(24,usableW/records.length*.7));
+      const height=Math.max(2,T+usableH-y(v));
+      svg+=`<rect tabindex="0" role="button" data-day="${r.date}" aria-label="${esc(title)}"
+        x="${x(r.date)-width/2}" y="${v===0?T+usableH-2:y(v)}"
+        width="${width}" height="${height}" fill="${color}"><title>${esc(title)}</title></rect>`;
+    }else{
+      svg+=`<circle tabindex="0" role="button" data-day="${r.date}" aria-label="${esc(title)}"
+        cx="${x(r.date)}" cy="${y(v)}" r="4.5" fill="${color}"><title>${esc(title)}</title></circle>`;
+    }
+  });
+  svg+=`<text x="${L}" y="${H-10}" font-size="11" fill="#61746a">${esc(short(days()[0].date))}</text>
+    <text x="${W-R}" y="${H-10}" text-anchor="end" font-size="11" fill="#61746a">${esc(short(days().at(-1).date))}</text></svg>`;
+  return svg;
+}
+
+function symptomChart(a){
+  if(prefs().chart==='calendar'){
+    const offset=new Date(days()[0].date+'T12:00:00Z').getUTCDay();
+    return `<div class="calendar">
+      ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="small muted">${d}</div>`).join('')}
+      ${'<div></div>'.repeat(offset)}
+      ${a.grouped.map(d=>`<button class="day ${d.symptom===null?'missing':d.symptom?'yes':'no'}"
+        data-day="${d.date}" aria-label="${esc(d.date+': '+(d.symptom===null?'No symptom report':d.symptom?'Symptoms reported':'No symptoms reported'))}">
+        ${short(d.date)}<br>${d.symptom===null?'—':d.symptom?'Symptoms':'None reported'}
+      </button>`).join('')}
+    </div><p class="chart-note" style="margin-top:12px">Amber: symptoms reported · Green: explicitly reported no symptoms · Hatched: no symptom answer. Select a day for evidence.</p>`;
+  }
+  return `<div class="chartwrap">${chartSVG(a.grouped,{key:'severity',max:10,label:'Daily maximum reported symptom severity, zero to ten',type:'bar',color:'#aa701d'})}</div>
+    <p class="chart-note">Daily maximum reported severity, 0–10. Gaps mean no answers; small baseline bars mean an explicit zero. Original submissions remain available.</p>`;
+}
+
+function flags(a){
+  const list=[];
+  if(a.unreported)list.push({
+    title:'Medication-reporting gaps',
+    text:`${a.unreported} scheduled doses have no report. This does not show whether those doses were taken.`,
+    metric:'medication'
+  });
+  if(a.allFev.length>a.fev.length)list.push({
+    title:'Spirometry quality requires context',
+    text:`${a.allFev.length-a.fev.length} readings are excluded from the accepted-reading display because of rejected or conflicting quality metadata.`,
+    metric:'fev1'
+  });
+  // Compare equal-duration windows only within the selected period.
+  if(a.grouped.length>=14){
+    const recent=a.grouped.slice(-7),previous=a.grouped.slice(-14,-7);
+    const rate=arr=>{
+      const answered=arr.filter(d=>d.reported);
+      return {n:answered.filter(d=>d.symptom).length,d:answered.length};
+    };
+    const r=rate(recent),p=rate(previous);
+    if(r.d&&p.d&&r.n/r.d>p.n/p.d)list.unshift({
+      title:'Higher recent proportion of symptom-reporting days',
+      text:`${short(recent[0].date)}–${short(recent.at(-1).date)}: ${r.n}/${r.d} answered days; previous seven days: ${p.n}/${p.d}. Reporting coverage differs and this is not a validated deterioration alert.`,
+      metric:'symptoms'
+    });
+  }
+  return list.length?list.map(f=>`<div class="flag"><span class="badge review">Review context</span>
+    <h3 style="margin:8px 0 0">${esc(f.title)}</h3><p>${esc(f.text)}</p>
+    <button class="linkbtn" data-evidence="${f.metric}">Inspect evidence</button></div>`).join(''):
+    '<p class="muted">No configured descriptive review indicators in this period. This is not a clinical assessment.</p>';
+}
+
+function renderOverview(){
+  const a=aggregate(),p=currentPatient();
+  const fevDaily=days().map(d=>{
+    const accepted=d.devices.filter(x=>x.type==='fev1'&&x.quality==='accepted').sort((x,y)=>x.timestamp.localeCompare(y.timestamp));
+    return {date:d.date,value:accepted.at(-1)?.value??null};
+  });
+  return `
+    <div class="legend">
+      ${sourceBadge('device')}${sourceBadge('patient')}${sourceBadge('clinician')}
+      <span class="small muted">Source is shown independently of clinical interpretation.</span>
+    </div>
+    <div class="cards">${prefs().metrics.map(id=>{
+      const m=metricInfo(id,a);
+      return `<button class="card" data-evidence="${id}">
+        <span>${sourceBadge(m.source)}</span><span class="title">${esc(m.title)}</span>
+        <span class="value">${esc(m.value)}</span><span class="description">${esc(m.desc)}</span>
+        <span class="small" style="margin-top:auto;color:var(--blue)">Inspect evidence →</span>
+      </button>`;
+    }).join('')}</div>
+    <section class="panel summary">
+      <div class="sectionhead"><h2>${state.patientMode?'What we can discuss together':'Encounter summary'}</h2>
+        <span class="badge neutral">Calculated summary · not live AI</span></div>
+      <ul>${summaryFindings(a).map(f=>`<li>${esc(f.text)}
+        <button class="linkbtn" data-evidence="${f.metric}">Evidence</button></li>`).join('')}</ul>
+      <p class="help">Generated from calculated records in the selected period. No causal relationship, diagnosis, or treatment recommendation is inferred.
+      Future AI summaries should use these verified findings and retain evidence links.</p>
+    </section>
+    <div class="grid2">
+      <section class="panel">
+        <div class="sectionhead"><h2>${p.tracker==='Asthma'?'Symptoms':'Headaches'} over time</h2>
+          <div>
+            <label for="chart-type">Display</label>
+            <select id="chart-type"><option value="calendar" ${prefs().chart==='calendar'?'selected':''}>Calendar</option>
+              <option value="bar" ${prefs().chart==='bar'?'selected':''}>Severity bars</option></select>
+          </div>
+        </div>
+        ${symptomChart(a)}
+        <p class="help">Daily symptom presence means any report of symptoms that day; severity uses the maximum reported score.
+        Conflicting answers are preserved, not overwritten.</p>
+      </section>
+      <section class="panel clinician-only">
+        <h2>Items to inspect</h2>${flags(a)}
+        <div class="flag"><h3>Recorded action-plan zone</h3>
+          <p>No recorded zone is available in this demo dataset. A zone is not inferred from generic thresholds.</p></div>
+      </section>
+    </div>
+    ${p.condition==='asthma'?`<section class="panel">
+      <div class="sectionhead"><h2>Lung function: FEV1</h2>${sourceBadge('device')}</div>
+      ${a.fev.length?`<div class="chartwrap">${chartSVG(fevDaily,{
+        key:'value',max:4,label:'Quality-accepted FEV1 in liters, with gaps on days without accepted readings',color:'#245d9c'
+      })}</div>`:'<div class="empty">No accepted spirometry readings in this period.</div>'}
+      <p class="chart-note">Liters. Latest accepted reading per day; all original readings remain available.
+      Gaps are not interpolated. Device-measured does not mean error-free. No predicted-percent value or clinical range is invented.</p>
+      <button data-evidence="fev1">Review readings and quality</button>
+    </section>`:''}
+    <section class="panel">
+      <div class="sectionhead"><h2>Medication reporting</h2>${sourceBadge('patient')}</div>
+      <p><strong>${esc(p.medication.name)}</strong></p>
+      <div class="legend">
+        <span class="badge patient">${a.taken} marked taken</span>
+        <span class="badge review">${a.notTaken} marked not taken</span>
+        <span class="badge neutral">${a.unreported} no report</span>
+      </div>
+      <p class="help">Denominator: ${a.doses} scheduled doses in the demo schedule. This is not verified ingestion.
+      As-needed medication reports are not included in scheduled-dose percentages.</p>
+      <button data-evidence="medication">Inspect dose records</button>
+    </section>
+    <p class="small muted">Latest available records across the entire demo record: ${esc(latestSources())}. All timestamps use UTC.</p>`;
+}
+
+function dailyTable(ds=days()){
+  return `<div class="tablewrap"><table><thead><tr>
+    <th>Date (UTC)</th><th>Patient symptom reports</th><th>Doses: taken / not taken / no report</th>
+    <th>Device readings</th><th>Detail</th>
+  </tr></thead><tbody>${ds.slice().reverse().map(d=>{
+    const x=daily(d);
+    return `<tr><td>${esc(d.date)}</td>
+      <td>${x.reported?`${d.responses.length} submission(s); ${x.symptom?'symptoms reported':'no symptoms reported'}`:'No report'}</td>
+      <td>${d.doses.filter(v=>v.status==='taken').length} / ${d.doses.filter(v=>v.status==='not_taken').length} / ${d.doses.filter(v=>v.status==='no_report').length}</td>
+      <td>${d.devices.length?d.devices.map(v=>`${v.type.toUpperCase()} (${v.quality})`).join(', '):'No measurement'}</td>
+      <td><button class="linkbtn" data-day="${d.date}">Open</button></td></tr>`;
+  }).join('')}</tbody></table></div>`;
+}
+
+function renderData(){
+  return `<section class="panel"><h2>All data & provenance</h2>
+    <p>Patient reports, device readings, and clinician additions remain separate.</p>
+    <div class="legend">${sourceBadge('patient')}${sourceBadge('device')}${sourceBadge('clinician')}</div>
+    <p class="help">Question wording and medication names are demo definitions. Repository ingestion will require question-definition joins,
+    medication-ID resolution, timestamp handling, and quality reconciliation.</p>
+    ${dailyTable()}</section>
+    <section class="panel"><h2>Aggregation rules</h2><ul class="help">
+      <li>UTC is the demonstration day boundary. A production implementation needs a defined patient-local timezone.</li>
+      <li>Any positive symptom answer counts as a symptom day. A day without an answer remains unknown.</li>
+      <li>Daily severity is the maximum recorded score. School and activity impact use any positive report that day.</li>
+      <li>Multiple submissions are retained and inspectable; they are not assumed to be duplicates.</li>
+      <li>Only explicitly quality-accepted spirometry is included in the accepted-reading display.</li>
+      <li>Medication percentages use the supplied scheduled-dose opportunities, not an inferred universal schedule.</li>
+      <li>Device quality and measurement source are separate concepts.</li>
+    </ul></section>`;
+}
+
+function renderNotes(){
+  const relevant=reports.filter(r=>r.patient===state.patient);
+  return `<section class="panel">
+    <h2>Optional free text and speech-to-text</h2>
+    <p>Prototype of a requested future feature, not an existing SMART@Home capability.</p>
+    <div class="notice">
+      Use fictional text only. Browser speech recognition may send audio to the browser vendor.
+      Production use requires an approved transcription service, consent, access controls, and retention policies.
+      Nothing is submitted to a clinical system.
+    </div>
+    <div class="field"><label for="note-kind">Who is providing this information?</label>
+      <select id="note-kind">
+        <option value="patient" ${draft.kind==='patient'?'selected':''}>Patient-reported narrative</option>
+        <option value="clinician" ${draft.kind==='clinician'?'selected':''}>Clinician annotation</option>
+      </select>
+    </div>
+    <p class="help">A clinician annotation adds context; it never replaces patient answers.
+    Patient narratives remain unstructured and are not automatically turned into symptom or medication counts.</p>
+    <div class="field"><label for="draft-text">Reviewable draft</label>
+      <textarea id="draft-text" placeholder="Type a fictional report, or dictate a draft…">${esc(draft.text)}</textarea></div>
+    <div class="flex">
+      <button id="speech-start">Start dictation</button>
+      <button id="speech-stop" disabled>Stop dictation</button>
+      <button id="preview-summary">Preview extractive draft</button>
+    </div>
+    <div id="speech-status" class="status" role="status" aria-live="polite"></div>
+    <div id="draft-preview"></div>
+    <div class="field">
+      <label style="display:flex;gap:9px;align-items:center">
+        <input type="checkbox" id="confirm-text" ${draft.confirmed?'checked':''}>
+        I reviewed this draft with its author and confirmed the wording.
+      </label>
+    </div>
+    <button class="primary" id="save-report">Save confirmed demo entry</button>
+    <p class="help">Entries are kept only in this page session and disappear on refresh.
+    The preview copies complete sentences; it is not an AI clinical summary and does not extract diagnoses.</p>
+  </section>
+  <section class="panel"><h2>Supplemental entries</h2>
+    ${relevant.length?relevant.slice().reverse().map(r=>`<article class="record">
+      ${sourceBadge(r.kind)}
+      <div class="small muted">${esc(r.author)} · ${esc(r.time)} · User-reviewed</div>
+      <p style="white-space:pre-wrap;margin:10px 0">${esc(r.text)}</p>
+      <div class="help">Original tracker data unchanged. Entry is not included in calculated clinical metrics.</div>
+    </article>`).join(''):'<div class="empty">No supplemental entries for this patient.</div>'}
+  </section>`;
+}
+
+function renderSettings(){
+  const p=prefs();
+  const all=[...p.metrics,...metricIds.filter(id=>!p.metrics.includes(id))];
+  return `<section class="panel">
+    <h2>Customize the information—not the underlying reports</h2>
+    <p>Choose a focused overview. All source records remain available in All data.</p>
+    <div class="field"><label for="pref-scope">Save changes for</label>
+      <select id="pref-scope">
+        <option value="patient" ${state.scope==='patient'?'selected':''}>This patient + current provider</option>
+        <option value="provider" ${state.scope==='provider'?'selected':''}>Current provider default across patients</option>
+      </select>
+    </div>
+    <p class="help">This editor starts with the currently displayed view.
+    Patient overrides take precedence over provider defaults. Saved preferences stay in this browser only;
+    no login or clinical access control is implemented.</p>
+    <div id="metric-settings">${all.map(id=>`<div class="settingrow" data-setting="${id}">
+      <label><input type="checkbox" data-pin="${id}" ${p.metrics.includes(id)?'checked':''}>
+        ${esc(metricInfo(id).title)}</label>
+      <div class="flex">
+        <button data-move="${id}" data-direction="-1" aria-label="Move ${esc(metricInfo(id).title)} up">↑</button>
+        <button data-move="${id}" data-direction="1" aria-label="Move ${esc(metricInfo(id).title)} down">↓</button>
+      </div></div>`).join('')}</div>
+    <div class="field"><label for="pref-chart">Preferred symptom visualization</label>
+      <select id="pref-chart"><option value="calendar" ${p.chart==='calendar'?'selected':''}>Calendar</option>
+      <option value="bar" ${p.chart==='bar'?'selected':''}>Severity bars</option></select>
+    </div>
+    <div class="flex">
+      <button class="primary" id="save-prefs">Save view</button>
+      <button id="reset-patient">Remove this patient override</button>
+    </div>
+    <p class="help">Recommended: three or four priority measures. An asthma-only measure can remain unavailable for another tracker;
+    the dashboard does not manufacture an equivalent measurement.</p>
+  </section>`;
+}
+
+function render(){
+  stopSpeech();
+  const p=currentPatient();
+  $('app').classList.toggle('patientmode',state.patientMode);
+  $('patient-heading').textContent=state.patientMode?`${p.name}: our visit together`:`${p.name} · ${p.tracker}`;
+  $('patient-subtitle').textContent=`Fictional patient · Age ${p.age} · ${p.tracker} tracker · Demo record through ${END}`;
+  $('patient-mode').textContent=state.patientMode?'Return to clinician view':'Discuss with patient';
+  $('period-label').textContent=`${short(days()[0].date)}–${short(days().at(-1).date)}, 2026 · ${state.range} days`;
+  $('view-label').textContent=saved.overrides[prefKey()]?'Patient-specific view':'Provider default view';
+  $('provider').value=state.provider;
+  $('patient-select').value=state.patient;
+  $('range').value=state.range;
+  document.querySelectorAll('.tabs button').forEach(b=>{
+    if(b.dataset.nav===state.page)b.setAttribute('aria-current','page');
+    else b.removeAttribute('aria-current');
+  });
+  $('content').innerHTML=state.page==='overview'?renderOverview():
+    state.page==='data'?renderData():state.page==='notes'?renderNotes():renderSettings();
+}
+
+function modal(title,html){
+  $('detail-title').textContent=title;
+  $('detail-body').innerHTML=html;
+  if(!$('detail').open)$('detail').showModal();
+}
+
+function showDay(date){
+  const d=currentPatient().days.find(x=>x.date===date);
+  if(!d)return;
+  modal(`Source records · ${date} (UTC)`,`
+    <h3>Questionnaire submissions</h3>
+    ${d.responses.length?d.responses.map(r=>`<div class="record">${sourceBadge('patient')}
+      <p>${esc(r.timestamp)}<br>
+      Symptoms: ${r.symptoms?'Yes':'No'} · Severity: ${r.severity}/10<br>
+      Missed school: ${r.schoolMissed?'Yes':'No'} · Activity limitation: ${r.activityLimited?'Yes':'No'}
+      ${r.rescueUses===null?'':`<br>Reported rescue uses in this submission: ${r.rescueUses}`}</p>
+      <span class="help">Source ID: ${esc(r.id)}</span></div>`).join(''):
+      '<p class="muted">No symptom answers. This is not a symptom-free day.</p>'}
+    <h3>Scheduled medication opportunities</h3>
+    ${d.doses.map(r=>`<div class="record">${sourceBadge('patient')}
+      <p>${esc(currentPatient().medication.name)} · ${esc(r.scheduledAt)}<br>
+      <strong>${r.status==='taken'?'Marked taken':r.status==='not_taken'?'Marked not taken':'No report'}</strong></p>
+      <span class="help">Source ID: ${esc(r.id)}</span></div>`).join('')}
+    <h3>Device measurements</h3>
+    ${d.devices.length?d.devices.map(r=>deviceRecord(r)).join(''):'<p class="muted">No device measurement that day.</p>'}
+    <details><summary>Original demo record</summary><pre>${esc(JSON.stringify(d,null,2))}</pre></details>`);
+}
+
+function deviceRecord(r){
+  const value=r.type==='bp'?`${r.value.systolic}/${r.value.diastolic}`:r.value.toFixed(2);
+  return `<div class="record">${sourceBadge('device')}
+    <p><strong>${esc(r.type.toUpperCase())}: ${esc(value)} ${esc(r.unit)}</strong><br>
+    ${esc(r.timestamp)}<br>Quality: <strong>${esc(r.quality)}</strong><br>${esc(r.qualityNote)}</p>
+    <span class="help">Source ID: ${esc(r.id)}</span></div>`;
+}
+
+function showEvidence(id){
+  const a=aggregate(),m=metricInfo(id,a);
+  let body=`<p><strong>${esc(m.value)}</strong> — ${esc(m.desc)}</p>`;
+  if(id==='fev1'||id==='bp'){
+    const items=days().flatMap(d=>d.devices).filter(x=>x.type===(id==='fev1'?'fev1':'bp'));
+    body+=items.length?items.slice().reverse().map(deviceRecord).join(''):
+      '<div class="empty">No matching measurements.</div>';
+  }else if(id==='medication'){
+    body+=`<p class="help">Schedule is defined in demo data; reports are not verified ingestion.
+      All dose IDs map to ${esc(currentPatient().medication.name)}.</p>
+      <div class="tablewrap"><table><thead><tr><th>Scheduled (UTC)</th><th>Report</th><th>Reported at</th></tr></thead>
+      <tbody>${days().flatMap(d=>d.doses).slice().reverse().map(r=>`<tr>
+      <td>${esc(r.scheduledAt)}</td><td>${r.status==='taken'?'Marked taken':r.status==='not_taken'?'Marked not taken':'No report'}</td>
+      <td>${esc(r.reportedAt||'—')}</td></tr>`).join('')}</tbody></table></div>`;
+  }else body+=dailyTable();
+  modal(m.title+' · evidence',body);
+}
+
+function stopSpeech(){
+  if(recognition){
+    const old=recognition;recognition=null;
+    old.onresult=null;old.onend=null;old.onerror=null;
+    try{old.abort();}catch{}
+  }
+}
+function startSpeech(){
+  const API=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!API){$('speech-status').textContent='Speech recognition is unavailable in this browser. Type a draft instead.';return;}
+  if(!confirm('Fictional data only. Your browser may send audio to its speech service. Start microphone transcription?'))return;
+  stopSpeech();
+  const r=new API();recognition=r;
+  r.lang='en-US';r.continuous=true;r.interimResults=false;
+  const finish=()=>{
+    if(recognition===r)recognition=null;
+    if($('speech-start'))$('speech-start').disabled=false;
+    if($('speech-stop'))$('speech-stop').disabled=true;
+  };
+  r.onresult=e=>{
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)draft.text+=(draft.text?' ':'')+e.results[i][0].transcript;
+    }
+    draft.confirmed=false;
+    if($('draft-text'))$('draft-text').value=draft.text;
+    if($('confirm-text'))$('confirm-text').checked=false;
+    if($('draft-preview'))$('draft-preview').innerHTML='';
+  };
+  r.onerror=e=>{
+    if($('speech-status'))$('speech-status').textContent='Dictation error: '+e.error+'. You can type instead.';
+    finish();
+  };
+  r.onend=()=>{
+    if($('speech-status'))$('speech-status').textContent='Dictation stopped. Review the complete text before saving.';
+    finish();
+  };
+  try{
+    r.start();
+    $('speech-start').disabled=true;$('speech-stop').disabled=false;
+    $('speech-status').textContent='Listening. Use Stop dictation when finished.';
+  }catch{
+    finish();$('speech-status').textContent='Could not start dictation. Check browser microphone permissions.';
+  }
+}
+
+function exportCSV(){
+  const header=['date_utc','patient_id','tracker','symptom_submissions','symptoms_reported',
+    'max_reported_severity','school_missed_reported','activity_limited_reported',
+    'scheduled_doses','marked_taken','marked_not_taken','no_dose_report',
+    'accepted_fev1_l','excluded_fev1_count','latest_bp','data_origin'];
+  const rows=days().map(d=>{
+    const x=daily(d);
+    const fev=d.devices.filter(v=>v.type==='fev1'&&v.quality==='accepted').at(-1);
+    const bp=d.devices.filter(v=>v.type==='bp').at(-1);
+    return [d.date,currentPatient().id,currentPatient().tracker,d.responses.length,
+      x.symptom===null?'unknown':x.symptom,x.severity??'',
+      x.school===null?'unknown':x.school,x.activity===null?'unknown':x.activity,
+      d.doses.length,d.doses.filter(v=>v.status==='taken').length,
+      d.doses.filter(v=>v.status==='not_taken').length,d.doses.filter(v=>v.status==='no_report').length,
+      fev?.value??'',d.devices.filter(v=>v.type==='fev1'&&v.quality!=='accepted').length,
+      bp?bp.value.systolic+'/'+bp.value.diastolic:'',
+      'locally_generated_fictional_demo_not_repository_data'];
+  });
+  const csv=[header,...rows].map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  const a=document.createElement('a');a.href=url;
+  a.download=`careview-fictional-${state.patient}-${state.range}days.csv`;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  announce('Exported daily aggregates. Supplemental free text is not included.');
+}
+
+$('provider').addEventListener('change',e=>{
+  state.provider=e.target.value;render();
+});
+$('patient-select').addEventListener('change',e=>{
+  if(draft.text&&!confirm('Switch patient and discard the unsaved draft?')){
+    e.target.value=state.patient;return;
+  }
+  draft={text:'',kind:'patient',confirmed:false};
+  state.patient=e.target.value;render();
+});
+$('range').addEventListener('change',e=>{state.range=Number(e.target.value);render();});
+$('patient-mode').addEventListener('click',()=>{
+  state.patientMode=!state.patientMode;state.page='overview';render();
+});
+$('close-detail').addEventListener('click',()=>$('detail').close());
+$('export').addEventListener('click',exportCSV);
+
+document.addEventListener('keydown',e=>{
+  const node=e.target.closest('[data-day]');
+  if(node&&node.tagName.toLowerCase()!=='button'&&(e.key==='Enter'||e.key===' ')){
+    e.preventDefault();showDay(node.dataset.day);
+  }
+});
+
+document.addEventListener('input',e=>{
+  if(e.target.id==='draft-text'){
+    draft.text=e.target.value;draft.confirmed=false;
+    $('confirm-text').checked=false;$('draft-preview').innerHTML='';
+  }
+});
+
+document.addEventListener('change',e=>{
+  if(e.target.id==='chart-type'){
+    saved.overrides[prefKey()]={...prefs(),chart:e.target.value};
+    const persisted=storePrefs();render();
+    announce(persisted?'Chart choice saved for this patient and provider.':'Chart updated for this session; browser storage unavailable.');
+  }
+  if(e.target.id==='pref-scope')state.scope=e.target.value;
+  if(e.target.id==='note-kind'){
+    draft.kind=e.target.value;draft.confirmed=false;
+    $('confirm-text').checked=false;
+  }
+  if(e.target.id==='confirm-text')draft.confirmed=e.target.checked;
+});
+
+document.addEventListener('click',e=>{
+  const nav=e.target.closest('[data-nav]');
+  if(nav){state.page=nav.dataset.nav;render();return;}
+  const day=e.target.closest('[data-day]');
+  if(day){showDay(day.dataset.day);return;}
+  const evidence=e.target.closest('[data-evidence]');
+  if(evidence){showEvidence(evidence.dataset.evidence);return;}
+  const move=e.target.closest('[data-move]');
+  if(move){
+    const row=move.closest('.settingrow');
+    const sibling=move.dataset.direction==='-1'?row.previousElementSibling:row.nextElementSibling;
+    if(sibling){
+      if(move.dataset.direction==='-1')row.parentNode.insertBefore(row,sibling);
+      else row.parentNode.insertBefore(sibling,row);
+    }
+    return;
+  }
+  const button=e.target.closest('button');
+  if(!button)return;
+  switch(button.id){
+    case 'save-prefs':{
+      const metrics=[...document.querySelectorAll('[data-pin]')].filter(x=>x.checked).map(x=>x.dataset.pin);
+      if(!metrics.length){announce('Select at least one priority measure.');return;}
+      const config={metrics,chart:$('pref-chart').value};
+      if(state.scope==='provider')saved.defaults[state.provider]=config;
+      else saved.overrides[prefKey()]=config;
+      const persisted=storePrefs();
+      state.page='overview';render();
+      announce((persisted?'Preferences saved.':'Preferences updated for this session.')+
+        (state.scope==='provider'&&saved.overrides[prefKey()]?' This patient still uses its separate override.':''));
+      break;
+    }
+    case 'reset-patient':
+      delete saved.overrides[prefKey()];storePrefs();render();
+      announce('Patient override removed. Provider defaults now apply.');break;
+    case 'speech-start':startSpeech();break;
+    case 'speech-stop':
+      if(recognition)recognition.stop();break;
+    case 'preview-summary':{
+      if(!draft.text.trim()){announce('Enter a fictional draft first.');return;}
+      const sentences=draft.text.trim().match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[draft.text.trim()];
+      const preview=sentences.slice(0,2).join(' ').trim();
+      $('draft-preview').innerHTML=`<div class="record"><strong>Extractive preview—not live AI</strong>
+        <p style="white-space:pre-wrap;margin-top:10px">${esc(preview)}</p>
+        <p class="help">${sentences.length>2?'Additional sentences omitted from this preview. ':''}
+        The full original draft will be retained. Nothing here changes calculated measurements.</p></div>`;
+      break;
+    }
+    case 'save-report':
+      if(recognition){announce('Stop dictation and review the draft before saving.');return;}
+      if(!draft.text.trim()||!draft.confirmed){announce('Enter a draft and confirm that its author reviewed the wording.');return;}
+      reports.push({
+        patient:state.patient,kind:draft.kind,text:draft.text.trim(),time:now(),
+        author:draft.kind==='patient'?currentPatient().name+' (demo report)':
+          $('provider').selectedOptions[0].textContent+' (demo annotation)'
+      });
+      draft={text:'',kind:'patient',confirmed:false};render();
+      announce('Confirmed demo entry saved for this session. Original records were not modified.');break;
+  }
+});
+
+
+/* CAREVIEW_PROFILE_UPGRADE_V1 */
+
+const specialtyLibrary = [
+  {
+    name: "Primary Care & General Medicine",
+    focuses: [
+      "Family Medicine",
+      "Internal Medicine",
+      "Geriatrics",
+      "Adolescent Medicine",
+      "Preventive Medicine",
+      "Hospital Medicine"
+    ]
+  },
+  {
+    name: "Cardiology",
+    focuses: [
+      "General Cardiology",
+      "Heart Failure",
+      "Electrophysiology",
+      "Interventional Cardiology",
+      "Adult Congenital Heart Disease",
+      "Preventive Cardiology"
+    ]
+  },
+  {
+    name: "Pulmonology & Respiratory",
+    focuses: [
+      "Asthma Care",
+      "COPD Care",
+      "Cystic Fibrosis",
+      "Sleep Medicine",
+      "Pulmonary Hypertension",
+      "Interstitial Lung Disease"
+    ]
+  },
+  {
+    name: "Neurology",
+    focuses: [
+      "Headache & Migraine",
+      "Epilepsy",
+      "Movement Disorders",
+      "Neuromuscular Medicine",
+      "Stroke / Vascular Neurology",
+      "Neurocritical Care Follow-up"
+    ]
+  },
+  {
+    name: "Endocrinology",
+    focuses: [
+      "Diabetes Management",
+      "Thyroid Disorders",
+      "Metabolic Disorders",
+      "Adrenal Disorders",
+      "Pituitary Disorders",
+      "Reproductive Endocrinology"
+    ]
+  },
+  {
+    name: "Gastroenterology & Hepatology",
+    focuses: [
+      "Inflammatory Bowel Disease",
+      "Functional GI Disorders",
+      "Hepatology",
+      "Motility Disorders",
+      "Transplant Hepatology",
+      "General Gastroenterology"
+    ]
+  },
+  {
+    name: "Nephrology & Urology",
+    focuses: [
+      "Chronic Kidney Disease",
+      "Dialysis Care",
+      "Kidney Transplant Follow-up",
+      "General Urology",
+      "Pediatric Urology",
+      "Bladder Dysfunction"
+    ]
+  },
+  {
+    name: "Hematology & Oncology",
+    focuses: [
+      "Medical Oncology",
+      "Hematology",
+      "Breast Oncology",
+      "Hematologic Malignancies",
+      "Survivorship Care",
+      "Palliative Oncology"
+    ]
+  },
+  {
+    name: "Rheumatology & Immunology",
+    focuses: [
+      "Rheumatoid Arthritis",
+      "Lupus Care",
+      "Vasculitis",
+      "Allergy & Immunology",
+      "Immunodeficiency",
+      "Autoimmune Disorders"
+    ]
+  },
+  {
+    name: "Psychiatry & Behavioral Health",
+    focuses: [
+      "General Psychiatry",
+      "Child & Adolescent Psychiatry",
+      "Mood Disorders",
+      "Anxiety Disorders",
+      "Addiction Psychiatry",
+      "Geriatric Psychiatry"
+    ]
+  },
+  {
+    name: "Obstetrics & Gynecology",
+    focuses: [
+      "General OB-GYN",
+      "Maternal-Fetal Medicine",
+      "Reproductive Endocrinology",
+      "Gynecologic Oncology",
+      "Urogynecology",
+      "Menopause Care"
+    ]
+  },
+  {
+    name: "Dermatology",
+    focuses: [
+      "General Dermatology",
+      "Pediatric Dermatology",
+      "Inflammatory Skin Disorders",
+      "Dermatologic Surgery"
+    ]
+  },
+  {
+    name: "Orthopedics & Rehabilitation",
+    focuses: [
+      "General Orthopedics",
+      "Sports Medicine",
+      "Spine Care",
+      "Hand Surgery",
+      "Physical Medicine & Rehabilitation",
+      "Chronic Pain Rehabilitation"
+    ]
+  },
+  {
+    name: "ENT & Ophthalmology",
+    focuses: [
+      "General ENT",
+      "Otology / Neurotology",
+      "Rhinology",
+      "Voice & Swallowing",
+      "General Ophthalmology",
+      "Glaucoma",
+      "Retinal Disease"
+    ]
+  },
+  {
+    name: "Infectious Disease",
+    focuses: [
+      "General Infectious Disease",
+      "HIV Care",
+      "Transplant Infectious Disease",
+      "Complex Infection Follow-up"
+    ]
+  },
+  {
+    name: "Pediatrics",
+    focuses: [
+      "General Pediatrics",
+      "Developmental-Behavioral Pediatrics",
+      "Neonatology Follow-up",
+      "Pediatric Cardiology",
+      "Pediatric Neurology",
+      "Pediatric Gastroenterology",
+      "Pediatric Endocrinology",
+      "Pediatric Hematology-Oncology"
+    ]
+  },
+  {
+    name: "Surgery & Perioperative Care",
+    focuses: [
+      "General Surgery",
+      "Cardiothoracic Surgery",
+      "Vascular Surgery",
+      "Neurosurgery",
+      "Anesthesiology",
+      "Perioperative Follow-up"
+    ]
+  },
+  {
+    name: "Emergency & Critical Care",
+    focuses: [
+      "Emergency Medicine Follow-up",
+      "Intensive Care Follow-up",
+      "Neurocritical Care",
+      "Pulmonary Critical Care"
+    ]
+  },
+  {
+    name: "Pain & Palliative Medicine",
+    focuses: [
+      "Chronic Pain Medicine",
+      "Palliative Medicine",
+      "Hospice Care",
+      "Interventional Pain"
+    ]
+  },
+  {
+    name: "Occupational & Environmental Medicine",
+    focuses: [
+      "Occupational Medicine",
+      "Environmental Medicine",
+      "Travel Medicine",
+      "Workplace Rehabilitation"
+    ]
+  }
+];
+
+const focusConfigurations = {
+  asthma: {
+    specialty_id: "pulmonology",
+    specialty_name: "Pulmonology & Respiratory",
+    focus_id: "asthma",
+    display_name: "Asthma Care",
+    clinical_focus: "Asthma control and action-plan follow-up",
+    metric_ids: ["symptoms", "rescueReports", "fev1", "medication"],
+    primary_chart: "calendar",
+    supporting_fields: [
+      "Recorded action-plan zones",
+      "Night waking",
+      "Missed school/work",
+      "Spirometry quality",
+      "Missing entries"
+    ],
+    available_data_sources: ["patient", "device"],
+    time_window: 30,
+    patient_id: "asthma",
+    implemented: true
+  },
+  migraine: {
+    specialty_id: "neurology",
+    specialty_name: "Neurology",
+    focus_id: "migraine",
+    display_name: "Headache & Migraine",
+    clinical_focus: "Headache burden and treatment response",
+    metric_ids: ["symptoms", "painSeverity", "acuteDays", "activityDays"],
+    primary_chart: "bar",
+    supporting_fields: [
+      "Episode duration",
+      "Triggers",
+      "Sleep",
+      "Preventive medication use",
+      "Monthly trends"
+    ],
+    available_data_sources: ["patient"],
+    time_window: 30,
+    patient_id: "migraine",
+    implemented: true
+  },
+  diabetes: {
+    specialty_id: "endocrinology",
+    specialty_name: "Endocrinology",
+    focus_id: "diabetes",
+    display_name: "Diabetes Management",
+    clinical_focus: "Glycemic patterns and self-management",
+    metric_ids: ["glucose", "timeInRange", "hypoglycemia", "medication"],
+    primary_chart: "glucose-trend",
+    supporting_fields: [
+      "HbA1c",
+      "Meal/activity context",
+      "Device wear/completeness",
+      "Glucose variability"
+    ],
+    available_data_sources: [],
+    time_window: 30,
+    patient_id: "diabetes",
+    implemented: false
+  }
+};
+
+/*
+These public accounts simulate approved profiles only.
+They are not credentials for real authentication.
+*/
+const demoProviders = [
+  {
+    id: "demo-pulmonary",
+    email: "pulmonary@careview.demo",
+    name: "Dr. Avery Patel",
+    focus_id: "asthma"
+  },
+  {
+    id: "demo-neurology",
+    email: "neurology@careview.demo",
+    name: "Dr. Morgan Lee",
+    focus_id: "migraine"
+  },
+  {
+    id: "demo-endocrinology",
+    email: "endocrinology@careview.demo",
+    name: "Dr. Riley Chen",
+    focus_id: "diabetes"
+  }
+];
+
+const demoPassword = "CareViewDemo!";
+let signedInProvider = null;
+
+const activeConfiguration = () =>
+  focusConfigurations[signedInProvider.focus_id];
+
+const providerStorageKey = () =>
+  "careview-provider-view-v3:" + signedInProvider.id;
+
+/* Empty adult record: no glucose readings or other facts invented. */
+patients.diabetes = {
+  id: "diabetes",
+  name: "Taylor Chen",
+  age: 45,
+  tracker: "Diabetes",
+  condition: "diabetes",
+  medication: {
+    id: "unconfigured-diabetes-medication",
+    name: "Medication schedule not supplied"
+  },
+  days: Array.from({length: 90}, (_, i) => ({
+    date: iso(i - 89),
+    responses: [],
+    doses: [],
+    devices: [],
+    actionPlanZone: null
+  }))
+};
+
+$("patient-select").add(
+  new Option("Taylor Chen · Diabetes configuration preview", "diabetes")
+);
+
+const extraMetricDefinitions = {
+  rescueReports: {
+    title: "Rescue medication use",
+    unit: "reported uses",
+    expected: "Patient report"
+  },
+  painSeverity: {
+    title: "Maximum reported headache severity",
+    unit: "0–10",
+    expected: "Patient report"
+  },
+  acuteDays: {
+    title: "Acute medication days",
+    unit: "days",
+    expected: "Patient report"
+  },
+  activityDays: {
+    title: "Days with activity limitations",
+    unit: "days",
+    expected: "Patient report"
+  },
+  glucose: {
+    title: "Glucose trend",
+    unit: "mg/dL or mmol/L; source unit required",
+    expected: "Device measurement or imported laboratory result"
+  },
+  timeInRange: {
+    title: "Time in target range",
+    unit: "%",
+    expected: "Device-derived; prescribed target range required"
+  },
+  hypoglycemia: {
+    title: "Hypoglycemia episodes",
+    unit: "episodes",
+    expected: "Patient report or governed device interpretation"
+  }
+};
+
+Object.keys(extraMetricDefinitions).forEach(id => {
+  if (!metricIds.includes(id)) metricIds.push(id);
+});
+
+const originalMetricInfo = metricInfo;
+const originalOverview = renderOverview;
+const originalSettings = renderSettings;
+const originalRender = render;
+const originalPrefs = prefs;
+const originalSourceBadge = sourceBadge;
+
+sourceBadge = function(source) {
+  if (source === "imported") {
+    return '<span class="badge cv-imported">Imported lab / record</span>';
+  }
+  return originalSourceBadge(source);
+};
+
+function periodDescription() {
+  const selected = days();
+  return selected[0].date + "–" + selected.at(-1).date + " UTC";
+}
+
+function metricCompatible(id) {
+  if (["glucose", "timeInRange", "hypoglycemia"].includes(id)) {
+    return false;
+  }
+  if (["rescueReports", "fev1"].includes(id)) {
+    return state.patient === "asthma";
+  }
+  if (["painSeverity", "acuteDays"].includes(id)) {
+    return state.patient === "migraine";
+  }
+  return true;
+}
+
+metricInfo = function(id, a = aggregate()) {
+  const definition = extraMetricDefinitions[id];
+  const period = periodDescription();
+
+  if (definition) {
+    let value = "Unavailable";
+    let source = "derived";
+    let observations = 0;
+    let explanation = "No mapped records for this measure.";
+
+    if (metricCompatible(id)) {
+      if (id === "painSeverity" && a.reported) {
+        const values = days().flatMap(d =>
+          d.responses.map(r => r.severity).filter(Number.isFinite)
+        );
+        observations = values.length;
+        value = observations ? Math.max(...values) + " / 10" : "Unavailable";
+        source = "patient";
+        explanation =
+          "Maximum across submissions, not an average. " +
+          (a.total - a.reported) + " days without symptom answers.";
+      }
+
+      if (id === "activityDays") {
+        observations = days().reduce(
+          (sum, d) => sum + d.responses.length, 0
+        );
+        value = a.reported ? a.activity + " / " + a.reported : "Unavailable";
+        source = a.reported ? "patient" : "derived";
+        explanation =
+          "Days with reported limitations / reporting days. " +
+          (a.total - a.reported) + " days without answers.";
+      }
+
+      if (id === "rescueReports") {
+        observations = days().flatMap(d => d.responses)
+          .filter(r => Number.isFinite(r.rescueUses)).length;
+        value = observations ? "Inspect reports" : "Unavailable";
+        source = observations ? "patient" : "derived";
+        explanation =
+          "Original reported uses are available in day details. " +
+          "No daily total is calculated because multiple submissions " +
+          "may describe overlapping use.";
+      }
+    }
+
+    if (id === "timeInRange") {
+      explanation =
+        "No glucose series or clinician-defined target range supplied.";
+    }
+
+    if (id === "hypoglycemia") {
+      explanation =
+        "No mapped episode reports or governed device interpretation supplied.";
+    }
+
+    return {
+      title: definition.title,
+      value,
+      source,
+      desc:
+        explanation + " Unit: " + definition.unit +
+        ". Period: " + period +
+        ". Source observations: " + observations +
+        ". Expected source: " + definition.expected + "."
+    };
+  }
+
+  const m = originalMetricInfo(id, a);
+  const metadata = {
+    symptoms: {
+      unit: "days",
+      n: days().reduce((sum, d) => sum + d.responses.length, 0),
+      available: a.reported > 0
+    },
+    medication: {
+      unit: "% of scheduled doses",
+      n: a.taken + a.notTaken,
+      available: a.doses > 0
+    },
+    fev1: {
+      unit: "L",
+      n: a.allFev.length,
+      available: a.fev.length > 0
+    },
+    function: {
+      unit: "days",
+      n: days().reduce((sum, d) => sum + d.responses.length, 0),
+      available: a.reported > 0
+    },
+    coverage: {
+      unit: "days / calendar days",
+      n: a.reported,
+      available: true
+    },
+    bp: {
+      unit: "mmHg",
+      n: days().flatMap(d => d.devices).filter(v => v.type === "bp").length,
+      available: Boolean(a.bp)
+    }
+  }[id];
+
+  if (metadata) {
+    m.desc +=
+      " Unit: " + metadata.unit +
+      ". Period: " + period +
+      ". Source observations/reports: " + metadata.n +
+      ". Availability: " + (metadata.available ? "available" : "unavailable") + ".";
+  }
+  return m;
+};
+
+/* Preferences are isolated by demo provider identity, not specialty alone. */
+storePrefs = function() {
+  if (!signedInProvider) return false;
+  try {
+    localStorage.setItem(providerStorageKey(), JSON.stringify(saved));
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+prefs = function() {
+  const result = originalPrefs();
+  if (
+    signedInProvider &&
+    !saved.overrides[prefKey()] &&
+    !saved.defaults[state.provider]
+  ) {
+    result.chart = activeConfiguration().primary_chart === "bar"
+      ? "bar" : "calendar";
+  }
+  return result;
+};
+
+function profilePanel() {
+  const config = activeConfiguration();
+
+  return `
+    <section class="panel cv-profile-panel">
+      <div class="sectionhead">
+        <div>
+          <div class="small muted">Specialty family → Clinical-focus preset</div>
+          <h2>${esc(config.specialty_name)} → ${esc(config.display_name)}</h2>
+        </div>
+        <span class="badge neutral">
+          ${config.implemented ? "Mapped demo view" : "Configuration preview"}
+        </span>
+      </div>
+      <p>${esc(config.clinical_focus)}</p>
+      <p class="help">
+        Loaded from ${esc(signedInProvider.name)}’s predefined demo profile.
+        No repeated setup wizard.
+        Patient-specific adjustments take precedence over provider defaults.
+      </p>
+      <div class="legend">
+        ${sourceBadge("patient")}
+        ${sourceBadge("device")}
+        ${sourceBadge("clinician")}
+        ${sourceBadge("imported")}
+      </div>
+      <details>
+        <summary>Supporting information and implementation boundaries</summary>
+        <ul>
+          ${config.supporting_fields.map(item =>
+            `<li>${esc(item)}</li>`
+          ).join("")}
+        </ul>
+        <p class="help">
+          These are intended supporting fields, not a claim that all are
+          collected. Available source records remain inspectable.
+          Missing data are not treated as normal results or absent symptoms.
+        </p>
+        <p class="help">
+          Change since last visit: unavailable because no prior encounter
+          date is supplied. Selected-period trends are not a substitute
+          for a visit-to-visit comparison.
+        </p>
+        <p class="help">
+          No clinical thresholds, predictions, treatment recommendations,
+          consent enforcement, or clinical access controls are implemented.
+          The current asthma and migraine records are adolescent examples;
+          they do not define the age range of these specialties.
+        </p>
+      </details>
+    </section>`;
+}
+
+function unavailableOverview() {
+  const config = activeConfiguration();
+  const matchingPatient = state.patient === config.patient_id;
+
+  return `
+    <section class="panel">
+      <h2>${matchingPatient
+        ? "Configuration preview — data mapping pending"
+        : "Selected patient does not match this demo preset"}</h2>
+      <p>
+        ${matchingPatient
+          ? "This patient has no mapped observations or medication schedule. No values are fabricated."
+          : "The current demo mapping is for " +
+            esc(patients[config.patient_id].name) +
+            ". Other patient records are not substituted for the required measures."}
+      </p>
+    </section>
+    <div class="cards">
+      ${prefs().metrics.map(id => {
+        const m = metricInfo(id);
+        return `
+          <div class="card">
+            <span class="badge neutral">Unavailable for this preset</span>
+            <span class="title">${esc(m.title)}</span>
+            <span class="value">Unavailable</span>
+            <span class="description">
+              No compatible mapped observations in this preview.
+              Period: ${esc(periodDescription())}.
+              Observation count for this preset: 0.
+            </span>
+          </div>`;
+      }).join("")}
+    </div>
+    <section class="panel">
+      <h2>Planned trend view</h2>
+      <div class="empty">
+        ${esc(config.primary_chart === "glucose-trend"
+          ? "Glucose trend — unavailable"
+          : "Clinical-focus trend — unavailable")}
+      </div>
+      <p class="help">
+        Source records for the selected patient remain in All data.
+        Existing records are not relabeled as measurements for this focus.
+      </p>
+    </section>`;
+}
+
+renderOverview = function() {
+  const config = activeConfiguration();
+  const compatible = config.implemented &&
+    state.patient === config.patient_id;
+
+  return profilePanel() +
+    (compatible ? originalOverview() : unavailableOverview());
+};
+
+function directoryHTML() {
+  const count = specialtyLibrary.reduce(
+    (sum, family) => sum + family.focuses.length, 0
+  );
+
+  return `
+    <section class="panel">
+      <h2>Specialty & Clinical Focus Library</h2>
+      <p>
+        ${specialtyLibrary.length} specialty families ·
+        ${count} clinical-focus entries
+      </p>
+      <p class="help">
+        Proposed product taxonomy, not certified subspecialty credentials
+        or validated clinical guidance. Asthma and migraine have demo
+        mappings; diabetes is a configuration preview. Other entries below
+        are directory names only, pending detailed configuration and
+        approved source mappings.
+      </p>
+      <p class="help">
+        Browsing this directory does not change your approved profile
+        or grant patient access. Production profile changes require an
+        authorized administrative workflow.
+      </p>
+      ${specialtyLibrary.map((family, index) => `
+        <details class="cv-directory-family">
+          <summary>
+            ${String(index + 1).padStart(2, "0")}
+            ${esc(family.name)}
+            (${family.focuses.length})
+          </summary>
+          <ul>
+            ${family.focuses.map(name => `<li>${esc(name)}</li>`).join("")}
+          </ul>
+        </details>
+      `).join("")}
+    </section>`;
+}
+
+renderSettings = function() {
+  return originalSettings() + directoryHTML();
+};
+
+/* Sign-in interface. Real authentication belongs on a server. */
+const authStyles = document.createElement("style");
+authStyles.textContent = `
+  #app[hidden], #cv-auth[hidden] { display:none!important; }
+  #cv-auth {
+    max-width:560px;
+    margin:50px auto;
+    padding:30px;
+    background:white;
+    border:1px solid var(--line);
+    border-radius:16px;
+  }
+  #cv-auth input { width:100%; }
+  #cv-auth .field { margin:18px 0; }
+  #cv-auth .primary { width:100%; }
+  #cv-auth-error { color:#9b2727; min-height:20px; }
+  .cv-account {
+    padding:8px 0;
+    border-bottom:1px solid var(--line);
+    font-size:12px;
+    overflow-wrap:anywhere;
+  }
+  #cv-provider-identity { font-size:12px; }
+  #cv-provider-identity strong { display:block; }
+  #cv-provider-identity button { margin-top:8px; }
+  .cv-directory-family {
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .cv-directory-family summary { cursor:pointer; font-weight:700; }
+  .cv-imported { background:#e7f3f2; color:#276560; }
+  .cv-profile-panel { border-top:4px solid var(--green); }
+  .cv-profile-panel summary { cursor:pointer; }
+  @media(max-width:600px) {
+    #cv-auth { margin:18px; padding:22px; }
+  }
+`;
+document.head.appendChild(authStyles);
+
+const authScreen = document.createElement("section");
+authScreen.id = "cv-auth";
+authScreen.setAttribute("aria-labelledby", "cv-auth-title");
+authScreen.innerHTML = `
+  <div class="logo">Care<em>View</em></div>
+  <h1 id="cv-auth-title" style="margin-top:20px">Provider sign-in</h1>
+  <p class="muted">
+    Your predefined profile loads your specialty, clinical focus,
+    and saved view automatically.
+  </p>
+  <div class="notice">
+    <strong>Demonstration sign-in only.</strong>
+    Accounts and passwords are public in this HTML.
+    This does not protect patient records. Use fictional data only.
+  </div>
+  <form id="cv-auth-form">
+    <div class="field">
+      <label for="cv-email">Demo provider email</label>
+      <input id="cv-email" type="email" required
+        autocomplete="username"
+        placeholder="pulmonary@careview.demo">
+    </div>
+    <div class="field">
+      <label for="cv-password">Demo password — never enter a real password</label>
+      <input id="cv-password" type="password" required
+        autocomplete="off">
+    </div>
+    <p id="cv-auth-error" role="alert"></p>
+    <button class="primary" type="submit">Sign in to demonstration</button>
+  </form>
+  <details style="margin-top:20px" open>
+    <summary>Available demonstration accounts</summary>
+    ${demoProviders.map(profile => `
+      <div class="cv-account">
+        <strong>${esc(profile.name)}</strong><br>
+        ${esc(profile.email)}<br>
+        ${esc(focusConfigurations[profile.focus_id].specialty_name)}
+        → ${esc(focusConfigurations[profile.focus_id].display_name)}
+      </div>
+    `).join("")}
+    <p class="help">
+      Password for all three accounts:
+      <strong>${esc(demoPassword)}</strong>
+    </p>
+  </details>
+`;
+document.body.insertBefore(authScreen, $("app"));
+
+/* Keep the original select for compatibility; users no longer select a role. */
+$("provider").parentElement.style.display = "none";
+
+const identity = document.createElement("div");
+identity.id = "cv-provider-identity";
+document.querySelector(".brandline").appendChild(identity);
+
+const initialNotice = document.querySelector("main > .notice");
+if (initialNotice) {
+  initialNotice.innerHTML = `
+    <strong>Prototype / fictional records.</strong>
+    Data are generated locally, not imported from Synthea.
+    Sign-in is a demonstration only, not authentication or authorization.
+    This dashboard is not validated clinical decision support.
+  `;
+}
+
+function signOut() {
+  stopSpeech();
+  if ($("detail").open) $("detail").close();
+
+  reports.length = 0;
+  draft = {text:"", kind:"patient", confirmed:false};
+  saved = {defaults:{}, overrides:{}};
+  signedInProvider = null;
+
+  $("detail-body").innerHTML = "";
+  $("content").innerHTML = "";
+  $("status").textContent = "";
+  identity.innerHTML = "";
+  $("cv-password").value = "";
+
+  render();
+  $("cv-email").focus();
+}
+
+function signIn(profile) {
+  signedInProvider = profile;
+  const config = activeConfiguration();
+
+  state.provider = profile.id + ":" + config.focus_id;
+  state.patient = config.patient_id;
+  state.range = config.time_window;
+  state.page = "overview";
+  state.patientMode = false;
+  state.scope = "patient";
+
+  defaultOrders[state.provider] = [...config.metric_ids];
+
+  saved = {defaults:{}, overrides:{}};
+  try {
+    const stored = JSON.parse(
+      localStorage.getItem(providerStorageKey()) || "null"
+    );
+    if (
+      stored &&
+      stored.defaults && typeof stored.defaults === "object" &&
+      stored.overrides && typeof stored.overrides === "object"
+    ) {
+      saved = stored;
+    }
+  } catch {}
+
+  $("provider").replaceChildren(
+    new Option(profile.name + " · demo provider", state.provider)
+  );
+
+  identity.innerHTML = `
+    <strong>${esc(profile.name)}</strong>
+    <span>${esc(config.specialty_name)}</span><br>
+    <span>${esc(config.display_name)} · Demo session</span><br>
+    <button id="cv-sign-out" type="button">Sign out</button>
+  `;
+  $("cv-sign-out").addEventListener("click", signOut);
+
+  $("cv-password").value = "";
+  $("cv-auth-error").textContent = "";
+  render();
+
+  $("patient-heading").setAttribute("tabindex", "-1");
+  $("patient-heading").focus();
+}
+
+$("cv-auth-form").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const email = $("cv-email").value.trim().toLowerCase();
+  const password = $("cv-password").value;
+  const profile = demoProviders.find(p => p.email === email);
+
+  if (!profile || password !== demoPassword) {
+    $("cv-auth-error").textContent =
+      "Use one of the listed demo accounts and the demo password.";
+    return;
+  }
+
+  signIn(profile);
+});
+
+render = function() {
+  if (!signedInProvider) {
+    stopSpeech();
+    $("app").hidden = true;
+    authScreen.hidden = false;
+    return;
+  }
+
+  authScreen.hidden = true;
+  $("app").hidden = false;
+  originalRender();
+
+  const config = activeConfiguration();
+  $("view-label").textContent =
+    config.specialty_name + " → " + config.display_name + " · " +
+    (saved.overrides[prefKey()]
+      ? "Patient-specific adjustments"
+      : saved.defaults[state.provider]
+        ? "Saved provider preferences"
+        : "Clinical-focus defaults");
+};
+
+render();
+})();
+</script>
+</body>
+</html>
