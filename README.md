@@ -1,1 +1,1 @@
-Our final documents are SMART_at_Clinic_Refined_Professional_Architecture.html, SpecialtyMetricsDirectory.docx, and SMART@ClinicFINAL. Respecitvely, they are our Specialty Architecture guidelines, our appendices, and our final HTML file.
+Our final project deliverables include three files: **SMART_at_Clinic_Specialty_Architecture_Guidelines.docx**, **SMART_at_Clinic_Technical_Appendices.docx**, and **SMART_at_Clinic_Final_Prototype.html**. These contain our specialty architecture guidelines, technical appendices, and final interactive HTML prototype, respectively.
