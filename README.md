@@ -1,0 +1,1 @@
+Our final documents are SMART_at_Clinic_Refined_Professional_Architecture.html, SpecialtyMetricsDirectory.docx, and SMART@ClinicFINAL. Respecitvely, they are our Specialty Architecture guidelines, our appendices, and our final HTML file.
